@@ -20,18 +20,18 @@
             />
         </svg>
 
-        <form id="ordenarBiblioteca">
-            <fieldset>
-                <legend class="sr-only">Ordenar biblioteca por:</legend>
-                <button>nombre</button>
-                <button>año</button>
-                <button>extensión</button>
+        <menu id="ordenarBiblioteca">
+            <span class="sr-only">Ordenar biblioteca por:</span>
+            <li><button>nombre</button></li>
+            <li><button>año</button></li>
+            <li><button>extensión</button></li>
+            <li>
                 <button>
                     <span aria-hidden="true">A-Z / Z-A</span>
                     <span class="sr-only">Orden ascendente / orden descendente</span>
                 </button>
-            </fieldset>
-        </form>
+            </li>
+        </menu>
 
         <button id="nuevoLibro">
             <span class="sr-only">Agregar un </span>
@@ -90,7 +90,6 @@
                 <button type="button">Agregar</button>
                 <button type="reset">Volver a llenar</button>
                 <button id="cerrarModal" type="button">Cerrar</button>
-                <button formmethod="dialog" type="submit">Cancel</button>
             </fieldset>
         </form>
     </dialog>

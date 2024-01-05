@@ -14,15 +14,14 @@ btnCerrarModal.addEventListener('click', () => {
 
 // cerral modal al hacer clic por fuera del modal
 modalLibro.addEventListener("click", e => {
-    const dialogDimensions = modalLibro.getBoundingClientRect()
+    const modalDimensiones = modalLibro.getBoundingClientRect()
     if (
-        e.clientX < dialogDimensions.left ||
-        e.clientX > dialogDimensions.right ||
-        e.clientY < dialogDimensions.top ||
-        e.clientY > dialogDimensions.bottom
+        e.clientX < modalDimensiones.left ||
+        e.clientX > modalDimensiones.right ||
+        e.clientY < modalDimensiones.top ||
+        e.clientY > modalDimensiones.bottom
     ) {
         modalLibro.close()
     }
 })
 
-console.log('patito')
