@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css?family=IBM%20Plex%20Mono:700|Noto%20Serif%20Khmer:400');
+
+:root {
+    --text: #0c0d08;
+    --background: #f8f7f3;
+    --primary: #a5a671;
+    --secondary: #a5c5a3;
+    --accent: #85b291;
+}
+
+*,
+*::after,
+*::before { 
+    margin: 0; 
+    padding: 0;
+}
+
+html {
+    font-size: 100%;
+}
+
+body {
+    font-family: 'Noto Serif Khmer';
+    font-weight: 400;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'IBM Plex Mono';
+    font-weight: 700;
+}
+h1 {
+    font-size: 2.489rem;
+}
+h2 {
+    font-size: 2.074rem;
+}
+h3 {
+    font-size: 1.728rem;
+}
+small {
+    font-size: 0.833rem;
+}
