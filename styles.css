@@ -19,6 +19,16 @@
     padding: 0;
 }
 
+.sr-only:not(:focus):not(:active) {
+    clip: rect(0 0 0 0); 
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap; 
+    width: 1px;
+}
+
 html {
     font-size: 100%;
 }
@@ -183,15 +193,18 @@ main {
 .ficha__acciones svg {
     height: 1.4rem;
 }
-
-
-
-.sr-only:not(:focus):not(:active) {
-  clip: rect(0 0 0 0); 
-  clip-path: inset(50%);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  white-space: nowrap; 
-  width: 1px;
+.ficha__acciones button[data-leido="true"] > .ficha__leido {
+    display: inline;
 }
+.ficha__acciones button[data-leido="true"] > .ficha__leer {
+    display: none;
+}
+.ficha__acciones button[data-leido="false"] > .ficha__leido {
+    display: none;
+}
+.ficha__acciones button[data-leido="false"] > .ficha__leer {
+    display: inline;
+}
+
+
+
