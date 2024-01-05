@@ -4,8 +4,9 @@
     --text: rgb(246, 247, 242);
     --background: rgb(32, 30, 19);
     --primary: rgb(176, 176, 130);
-    --secondary: rgb(59, 91, 57);
+    --secondary: rgb(66, 84, 64);
     --accent: rgb(158, 194, 167);
+    --hover: rgb(214, 214, 89);
 
     --funte-titulos: 'IBM Plex Mono', monospace;
     --funte-corrido: 'Noto Serif', serif;
@@ -36,7 +37,10 @@ h1 {
 h2 {
     font-family: var(--funte-titulos);
     font-weight: 700;
-    font-size: 2.074rem;
+    font-size: 1.4rem;
+}
+small {
+    font-size: 0.833rem;
 }
 
 nav {
@@ -80,9 +84,9 @@ menu label {
     cursor: pointer;
 }
 menu label:hover {
-    color: var(--text);
+    color: var(--hover);
     text-decoration: underline;
-    text-decoration-color: var(--text);
+    text-decoration-color: var(--hover);
 }
 menu input {
     display: none;
@@ -110,14 +114,75 @@ nav button {
     background: none;
     background-color: var(--accent);
     font-family: var(--funte-titulos);
+    font-weight: 700;
     border-radius: 1rem;
     color: var(--background);
 }
 nav button:hover {
-    background-color: var(--text);
+    background-color: var(--hover);
     color: var(--secondary);
 }
 
+main {
+    padding: 5rem 2rem 0;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 2rem;
+}
+.ficha {
+    background-color: var(--accent);
+    transition: transform 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1rem ;
+}
+.ficha:hover {
+    transform: scale(1.05);
+}
+.ficha p {
+    max-width: 55ch;
+}
+.ficha__imagen {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 1rem 1rem 0 0;
+    mix-blend-mode: luminosity;
+}
+.ficha:hover > .ficha__imagen {
+    mix-blend-mode: normal;
+}
+.ficha__autoria{
+    margin: 1rem;
+    color: var(--background);
+}
+.ficha__informacion {
+    flex: 1;
+    margin: 0 1rem 0rem 3rem;
+    color: var(--secondary);
+}
+.ficha__acciones {
+    display: flex;
+    margin: 0.5rem 1rem 1rem auto;
+    gap: 0.2rem;
+}
+.ficha__acciones button {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    color: var(--secondary);
+    border-radius: 50%;
+    width: 2.2rem;
+    height: 2.2rem;
+}
+.ficha__acciones button:hover {
+    color: var(--background);
+}
+.ficha__acciones svg {
+    height: 1.4rem;
+}
 
 
 
