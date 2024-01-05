@@ -1,11 +1,14 @@
-@import url('https://fonts.googleapis.com/css?family=IBM%20Plex%20Mono:700|Noto%20Serif%20Khmer:400');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;700&family=Noto+Serif&display=swap');
 
 :root {
-    --text: #0c0d08;
-    --background: #f8f7f3;
-    --primary: #a5a671;
-    --secondary: #a5c5a3;
-    --accent: #85b291;
+    --text: rgb(246, 247, 242);
+    --background: rgb(32, 30, 19);
+    --primary: rgb(176, 176, 130);
+    --secondary: rgb(59, 91, 57);
+    --accent: rgb(158, 194, 167);
+
+    --funte-titulos: 'IBM Plex Mono', monospace;
+    --funte-corrido: 'Noto Serif', serif;
 }
 
 *,
@@ -20,31 +23,100 @@ html {
 }
 
 body {
-    font-family: 'Noto Serif Khmer';
+    font-family: var(--funte-corrido); 
     font-weight: 400;
-}
-
-h1,
-h2,
-h3 {
-    font-family: 'IBM Plex Mono';
-    font-weight: 700;
+    color: var(--text);
+    background-color: var(--background);
 }
 h1 {
-    font-size: 2.489rem;
+    font-family: var(--funte-titulos);
+    font-weight: 300;
+    font-size: 1rem;
 }
 h2 {
+    font-family: var(--funte-titulos);
+    font-weight: 700;
     font-size: 2.074rem;
 }
-h3 {
-    font-size: 1.728rem;
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 1rem;
+    row-gap: 1.5rem;
+
+    position: fixed;
+    width: calc(100vw - 2rem);
+    top: 0;
+
+    padding: 0.5rem 1rem;
+    background-color: var(--secondary);
+
+    justify-content: space-between;
+    align-items: center;
 }
-small {
-    font-size: 0.833rem;
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text);
 }
-
-
-
+.logo svg{
+    height: 30px;
+    fill: var(--text);
+}
+menu {
+    list-style: none;
+    
+    display: flex;
+    gap: 1rem
+}
+menu label {
+    background: none;
+    border: none;
+    font-family: var(--funte-titulos);
+    font-weight: 300;
+    color: var(--primary);
+    cursor: pointer;
+}
+menu label:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--text);
+}
+menu input {
+    display: none;
+}
+menu input[type="radio"]:checked + label {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--text);
+}
+menu input[type="checkbox"]:checked + label .ascendente {
+    display: inline;
+}
+menu input[type="checkbox"]:checked + label .descendente {
+    display: none;
+}
+menu input[type="checkbox"]:not(:checked) + label .descendente {
+    display: inline;
+}
+menu input[type="checkbox"]:not(:checked) + label .ascendente{
+    display: none;
+}
+nav button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    background-color: var(--accent);
+    font-family: var(--funte-titulos);
+    border-radius: 1rem;
+    color: var(--background);
+}
+nav button:hover {
+    background-color: var(--text);
+    color: var(--secondary);
+}
 
 
 
