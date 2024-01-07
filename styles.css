@@ -7,12 +7,13 @@
     --secondary: rgb(66, 84, 64);
     --accent: rgb(158, 194, 167);
     --hover: rgb(214, 214, 89);
+    /* --primary-bd: rgb(176 176 130 / 0.8); */
 
     --funte-titulos: 'IBM Plex Mono', monospace;
     --funte-corrido: 'Noto Serif', serif;
 }
 
-*,
+*:not(dialog),
 *::after,
 *::before { 
     margin: 0; 
@@ -49,9 +50,6 @@ h2 {
     font-weight: 700;
     font-size: 1.4rem;
 }
-small {
-    font-size: 0.833rem;
-}
 
 nav {
     display: flex;
@@ -68,6 +66,7 @@ nav {
 
     justify-content: space-between;
     align-items: center;
+    z-index: 1000;
 }
 .logo {
     display: flex;
@@ -97,6 +96,7 @@ menu label:hover {
     color: var(--hover);
     text-decoration: underline;
     text-decoration-color: var(--hover);
+    text-decoration-style: dotted;
 }
 menu input {
     display: none;
@@ -118,7 +118,13 @@ menu input[type="checkbox"]:not(:checked) + label .descendente {
 menu input[type="checkbox"]:not(:checked) + label .ascendente{
     display: none;
 }
-nav button {
+#ordenarBiblioteca {
+    margin: 0 auto;
+}
+#nuevoLibro {
+    margin: 0 0 0 auto;
+}
+button {
     padding: 0.5rem 1rem;
     border: none;
     background: none;
@@ -128,17 +134,22 @@ nav button {
     border-radius: 1rem;
     color: var(--background);
 }
-nav button:hover {
+button:hover {
     background-color: var(--hover);
     color: var(--secondary);
 }
 
 main {
-    padding: 5rem 2rem 0;
-
+    padding: 10rem 2rem 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
     gap: 2rem;
+}
+@media (min-width: 650px) {
+    main {
+        padding: 5rem 2rem 0;
+    }
+
 }
 .ficha {
     background-color: var(--accent);
@@ -206,5 +217,84 @@ main {
     display: inline;
 }
 
-
+::backdrop {
+    background-image: linear-gradient(
+        -15deg,
+        var(--secondary),
+        var(--primary)
+    );
+    opacity: 0.8;
+}
+dialog {
+    box-sizing: border-box;
+    width: clamp(350px, 50%, 500px);
+    overflow: scroll;
+    background-color: var(--background);
+    border: none;
+    border-radius: 1rem;
+    color: var(--text);
+    padding: 1.5rem;
+}
+fieldset {
+    border: none;
+}
+fieldset + fieldset {
+    margin: 1rem 0 0;
+}
+fieldset > div {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 0.5rem;
+}
+#nuevoLibro input:not([type="checkbox"]),
+#nuevoLibro textarea {
+    margin: 0.3rem 0 0;
+    border: none;
+    background-color: var(--primary);
+    padding: 0.2rem 0.5rem;
+    color: var(--background);
+    font-family: var(--funte-titulos);
+    font-size: 1rem;
+    line-height: 1.2;
+    border-radius: 0.2rem;
+}
+#nuevoLibro textarea {
+    resize: vertical;
+}
+#nuevoLibro input:focus-visible,
+#nuevoLibro textarea:focus-visible {
+    border: none;
+    outline: solid 1px var(--primary);
+    outline-offset: 2px;
+}
+#nuevoLibro input[type="checkbox"] ~ span {
+    color: var(--primary);
+}
+#nuevoLibro input[type="checkbox"]:checked + span {
+    display: inline;
+} 
+#nuevoLibro input[type="checkbox"]:checked ~ span:last-child {
+    display: none;
+} 
+#nuevoLibro input[type="checkbox"]:not(:checked) + span {
+    display: none;
+} 
+#nuevoLibro input[type="checkbox"]:not(:checked) ~ span:last-child {
+    display: inline;
+} 
+fieldset:last-child {
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+}
+#cerrarModal {
+   background: none;
+   border: solid 1px var(--accent);
+   color: var(--accent);
+}
+#cerrarModal:hover {
+   background: var(--hover);
+   border: solid 1px var(--hover);
+   color: var(--background);
+}
 

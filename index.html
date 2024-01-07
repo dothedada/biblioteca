@@ -74,8 +74,8 @@
                 </div>
 
                 <div>
-                    <label for="sinopsis">¿De qué trata?</label>
-                    <textarea id="sinopsis" cols="30" rows="10"></textarea>
+                    <label for="sinopsis">¿De qué trata? (140 caracteres)</label>
+                    <textarea id="sinopsis" rows="3" maxlength="140"></textarea>
                 </div>
 
                 <div>
@@ -85,7 +85,7 @@
 
                 <div>
                     <label for="anno">¿Cuándo fue escrito?</label>
-                    <input id="anno" type="text" inputmode="numeric">
+                    <input id="anno" type="number" inputmode="numeric">
                 </div>
 
                 <div>
@@ -94,17 +94,19 @@
                 </div>
 
                 <div>
-                    <label for="leido">¿Ya leiste este libro?</label>
-                    <input id="leido" type="checkbox">
+                    <label>¿Ya leiste este libro?
+                        <input id="leido" type="checkbox">
+                        <span>Ya lo leí</span>
+                        <span>No lo he leído</span>
+                    </label>
                 </div>
             </fieldset>
 
             <fieldset>
                 <legend class="sr-only">Acciones:</legend>
 
-                <button type="button">Agregar</button>
-                <button type="reset">Volver a llenar</button>
-                <button id="cerrarModal" type="button">Cerrar</button>
+                <button type="button" class="agregar">Agregar</button>
+                <button id="cerrarModal" type="button">Cancelar</button>
             </fieldset>
         </form>
     </dialog>
