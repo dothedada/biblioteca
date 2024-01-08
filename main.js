@@ -1,25 +1,55 @@
 const btnNuevoLibro = document.getElementById('nuevoLibro')
 const modalLibro = document.getElementById('modalLibro')
+const btnGuardarLibro = document.getElementById('guardarLibroNuevo')
 const btnCerrarModal = document.getElementById('cerrarModal')
 const displayLibros = document.getElementById('libreria')
 
-const biblioteca = []
+const nuevoLibro = document.querySelectorAll('#nuevoLibro input')
+const nuevoLibroDescripcion = document.querySelector('#nuevoLibro textarea')
 
-function Libro(titulo, autor, extension, anno, leido, descripcion, url, img) {
-    this.id = Math.floor(Math.random()*1000)
-    this.titulo = titulo
-    this.autor = autor
-    this.extension = !extension ? '???' : extension
-    this.anno = !anno ? '???' : anno
-    this.leido = leido ?? false 
-    this.descripcion = !descripcion ? '...' : descripcion
-    this.url = !url ? `https://google.com/search?q=${titulo}` : `http://${url}`
-    this.img = !img ? `https://picsum.photos/id/${this.id}/300/200` : `https://${img}`
+btnGuardarLibro.addEventListener('click', () => {
+    agregarLibro(
+        nuevoLibro[0].value, // libro
+        nuevoLibro[1].value, // autora
+        nuevoLibro[2].value, // url portada
+        nuevoLibroDescripcion.value, // descripcion
+        nuevoLibro[3].value, // páginas
+        nuevoLibro[4].value, // fecha de escritura
+        nuevoLibro[5].value, // url del libro
+        nuevoLibro[6].checked // leído
+    )
+    console.log(biblioteca)
+    modalLibro.close()
+    crearFicha(0)
+})
+
+const biblioteca = []
+let index = 0
+
+class Libro {
+    constructor (titulo, autor, img, descripcion, extension, anno, url, leido) {
+        this.indice = index
+        this.titulo = titulo
+        this.autor = autor
+        this.extension = !extension ? '???' : extension
+        this.anno = !anno ? '???' : anno
+        this.leido = leido ?? false 
+        this.descripcion = !descripcion ? '...' : descripcion
+        this.url = !url ? `https://google.com/search?q=${titulo}` : `http://${url}`
+        this.img = !img ? `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/300/200` : `https://${img}`
+    }
+}
+
+function agregarLibro(...informacion) {
+    biblioteca.unshift(new Libro(...informacion))
+    index++
 }
 
 function crearFicha(indice){
     const ficha = document.createElement('div')
     ficha.classList.add('ficha')
+    ficha.setAttribute('data-leido', biblioteca[indice].leido)
+    ficha.setAttribute('tabindex', '0')
 
     const imagen = document.createElement('img')
     imagen.src = biblioteca[indice].img
@@ -70,7 +100,6 @@ function crearFicha(indice){
     irBTN.appendChild(irSVG)
 
     const lecturaBTN = document.createElement('button')
-    lecturaBTN.setAttribute('data-leido', biblioteca[indice].leido)
     const lecturaSR = document.createElement('span')
     lecturaSR.classList.add('sr-only')
     lecturaSR.textContent = 'Marcar como libro'
@@ -99,6 +128,9 @@ function crearFicha(indice){
     lecturaBTN.appendChild(lecturaSR)
     lecturaBTN.appendChild(leerSpan)
     lecturaBTN.appendChild(leidoSpan)
+    lecturaBTN.addEventListener('click', () => {
+
+    })
 
     const editarBTN = document.createElement('button')
     const editarSR = document.createElement('span')
@@ -133,33 +165,34 @@ function crearFicha(indice){
     ficha.appendChild(sinopsis)
     ficha.appendChild(acciones)
 
-    displayLibros.appendChild(ficha)
-}
-
-function agregarLibro(...informacion) {
-    biblioteca.unshift(new Libro(...informacion))
+    displayLibros.insertBefore(ficha, displayLibros.firstElementChild)
 }
 
 agregarLibro(
     'El artesano',
     'Richard Sennet',
+    '',
+    'El artesano de Sennett aboga por la excelencia, conexión con el trabajo y el valor del proceso en la era moderna.',
     460,
     2012,
-    true,
-    'El artesano de Sennett aboga por la excelencia, conexión con el trabajo y el valor del proceso en la era moderna.',
     '',
-    '')
+    true
+)
 
 agregarLibro(
     'La insoportable levedad del ser',
     'Milan Kundera',
+    'img2.rtve.es/v/4836164/?w=1600',
+    'Kundera explora la vida, el amor y la insignificancia existencial en un mundo de decisiones y consecuencias ligeras.',
     230,
     1987,
-    false,
-    'Kundera explora la vida, el amor y la insignificancia existencial en un mundo de decisiones y consecuencias ligeras.',
     '',
-    'img2.rtve.es/v/4836164/?w=1600'
+    false
 )
+crearFicha(0)
+crearFicha(1)
+
+console.log(biblioteca)
 
 // comportamiento del modal
 btnNuevoLibro.addEventListener('click', () => {
@@ -169,9 +202,6 @@ btnNuevoLibro.addEventListener('click', () => {
 btnCerrarModal.addEventListener('click', () => {
     modalLibro.close()
 })
-
-crearFicha(0)
-crearFicha(1)
 
 // cerral modal al hacer clic por fuera del modal
 modalLibro.addEventListener("click", e => {

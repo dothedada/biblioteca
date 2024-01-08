@@ -27,7 +27,7 @@
         <menu id="ordenarBiblioteca">
             <span class="sr-only">Ordenar biblioteca por:</span>
 
-            <input id="nombre" type="radio" name="ordenar" checked>
+            <input id="nombre" type="radio" name="ordenar">
             <label for="nombre">nombre</label>
 
             <input id="anno" type="radio" name="ordenar">
@@ -53,7 +53,7 @@
     <dialog id="modalLibro">
         <form id="nuevoLibro" method="dialog">
             <fieldset>
-                <legend class="sr-only">Información principal:</legend>
+                <legend class="sr-only">Información básica:</legend>
 
                 <div>
                     <label for="titulo">¿Cuál es el nombre del libro? (Obligatorio)</label>
@@ -71,7 +71,7 @@
 
                 <div>
                     <label for="imagen">¿Donde encuentro la portada?</label>
-                    <input id="imagen" type="url" placeholder="https://direccionDeLaImagen.com">
+                    <input id="imagen" type="url" placeholder="direccionDeLaImagen.com">
                 </div>
 
                 <div>
@@ -91,7 +91,7 @@
 
                 <div>
                     <label for="web">¿Donde puedo encontrarlo?</label>
-                    <input id="web" type="url" placeholder="https://direccionDelLibro.com">
+                    <input id="web" type="url" placeholder="direccionDelLibro.com">
                 </div>
 
                 <div>
@@ -106,7 +106,7 @@
             <fieldset>
                 <legend class="sr-only">Acciones:</legend>
 
-                <button type="button">Agregar</button>
+                <button id="guardarLibroNuevo" type="button">Guardar</button>
                 <button id="cerrarModal" type="button">Cancelar</button>
             </fieldset>
         </form>

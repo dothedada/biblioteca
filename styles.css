@@ -158,8 +158,9 @@ main {
     flex-direction: column;
     border-radius: 1rem ;
 }
-.ficha:hover {
+.ficha:hover, .ficha:focus, .ficha:focus-within {
     transform: scale(1.05);
+    outline: none;
 }
 .ficha p {
     max-width: 55ch;
@@ -170,8 +171,27 @@ main {
     aspect-ratio: 16 / 9;
     object-fit: cover;
     border-radius: 1rem 1rem 0 0;
+}
+.ficha[data-leido="true"] .ficha__imagen {
+    mix-blend-mode: normal;
+}
+.ficha[data-leido="false"] .ficha__imagen {
     mix-blend-mode: luminosity;
 }
+
+.ficha[data-leido="true"] .ficha__leido {
+    display: inline;
+}
+.ficha[data-leido="true"] .ficha__leer {
+    display: none;
+}
+.ficha[data-leido="false"] .ficha__leido {
+    display: none;
+}
+.ficha[data-leido="false"] .ficha__leer {
+    display: inline;
+}
+
 .ficha:hover > .ficha__imagen {
     mix-blend-mode: normal;
 }
@@ -206,26 +226,15 @@ main {
 .ficha__acciones a:hover {
     color: var(--background);
 }
-.ficha__acciones button[data-leido="true"] > .ficha__leido {
-    display: inline;
-}
-.ficha__acciones button[data-leido="true"] > .ficha__leer {
-    display: none;
-}
-.ficha__acciones button[data-leido="false"] > .ficha__leido {
-    display: none;
-}
-.ficha__acciones button[data-leido="false"] > .ficha__leer {
-    display: inline;
+.ficha__acciones button:focus-visible,
+.ficha__acciones a:focus-visible {
+    outline: solid 1px var(--background);
 }
 
 ::backdrop {
-    background-image: linear-gradient(
-        -15deg,
-        var(--secondary),
-        var(--primary)
-    );
-    opacity: 0.8;
+    background: rgb(66 84 64 / 0.5);
+    -webkit-backdrop-filter: blur(5px);
+			backdrop-filter: blur(5px);
 }
 dialog {
     box-sizing: border-box;
