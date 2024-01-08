@@ -25,7 +25,6 @@ btnGuardarLibro.addEventListener('click', () => {
 
 const biblioteca = localStorage.getItem('biblioteca') === null ? []
     : JSON.parse(localStorage.getItem('biblioteca'))
-
 let index = biblioteca.length
 
 class Libro {
@@ -38,11 +37,15 @@ class Libro {
         this.leido = leido ?? false 
         this.descripcion = !descripcion ? '...' : descripcion
         this.url = !url ? 
-            `https://google.com/search?q=${titulo.replace(' ','+')}+${autor.replace(' ','+')}`
-          : `http://${url}`
+            `https://google.com/search?q=${
+                titulo.replace(' ','+')
+            }+${
+                autor.replace(' ','+')
+            }`
+            : `http://${url}`
         this.img = !img ?
             `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/300/200`
-          : `https://${img}`
+            : `https://${img}`
     }
 }
 
@@ -160,6 +163,21 @@ function crearFicha(indice){
     editarSVG.textContent = 'edit'
     editarBTN.appendChild(editarSR)
     editarBTN.appendChild(editarSVG)
+    editarBTN.addEventListener('click', function() {
+        const indice = this.closest('.ficha').getAttribute('data-indice')
+
+
+        console.log(nuevoLibro[0].value) // = , // libro
+        // nuevoLibro[1].value, // autora
+        // nuevoLibro[2].value, // url portada
+        // nuevoLibroDescripcion.value, // descripcion
+        // nuevoLibro[3].value, // páginas
+        // nuevoLibro[4].value, // fecha de escritura
+        // nuevoLibro[5].value, // url del libro
+        // nuevoLibro[6].checked // leído
+
+        modalLibro.showModal()
+    })
 
     const borrarBTN = document.createElement('button')
     const borrarSR = document.createElement('span')
@@ -194,9 +212,7 @@ function crearFicha(indice){
 
 biblioteca.forEach((_, index) => crearFicha(index))
 
-// const patito = JSON.stringify(biblioteca)
-// console.log(patito)
-// console.log(JSON.parse(patito))
+
 // comportamiento del modal
 btnNuevoLibro.addEventListener('click', () => {
    modalLibro.showModal() 

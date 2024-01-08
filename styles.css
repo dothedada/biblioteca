@@ -232,6 +232,26 @@ main {
 .ficha__acciones a:focus-visible {
     outline: solid 1px var(--background);
 }
+.nuevoLibroMain {
+    background-color: var(--secondary);
+    height: 100%;
+    width: 100%;
+    aspect-ratio: 1;
+    opacity: 0.5;
+    transition: opacity 0.1s ease-in-out,
+        transform 0.2s ease-in-out;
+}
+.nuevoLibroMain:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+.nuevoLibroMain span:last-child {
+    font-size: 15rem;
+    transition: transform 0.2s ease-in-out;
+}
+.nuevoLibroMain:hover span:last-child {
+    transform: rotate(90deg);
+}
 
 ::backdrop {
     background: rgb(66 84 64 / 0.5);
