@@ -7,7 +7,6 @@
     --secondary: rgb(66, 84, 64);
     --accent: rgb(158, 194, 167);
     --hover: rgb(214, 214, 89);
-    /* --primary-bd: rgb(176 176 130 / 0.8); */
 
     --funte-titulos: 'IBM Plex Mono', monospace;
     --funte-corrido: 'Noto Serif', serif;
@@ -49,6 +48,7 @@ h2 {
     font-family: var(--funte-titulos);
     font-weight: 700;
     font-size: 1.4rem;
+    text-wrap: balance;
 }
 
 nav {
@@ -180,7 +180,6 @@ main {
     color: var(--background);
 }
 .ficha__informacion {
-    flex: 1;
     margin: 0 1rem 0rem 3rem;
     color: var(--secondary);
 }
@@ -298,3 +297,6 @@ fieldset:last-child {
    color: var(--background);
 }
 
+button {
+    cursor: pointer;
+}
