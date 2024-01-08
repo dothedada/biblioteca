@@ -185,23 +185,26 @@ main {
 }
 .ficha__acciones {
     display: flex;
-    margin: 0.5rem 1rem 1rem auto;
     gap: 0.2rem;
+    justify-content: flex-end;
+    margin: 1rem 0.5rem 0.5rem;
 }
-.ficha__acciones button {
+.ficha__acciones button,
+.ficha__acciones a {
     background: none;
     border: none;
-    padding: 0.5rem;
     color: var(--secondary);
-    border-radius: 50%;
-    width: 2.2rem;
-    height: 2.2rem;
+    border-radius: 0;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
 }
-.ficha__acciones button:hover {
+.ficha__acciones button:hover,
+.ficha__acciones a:hover {
     color: var(--background);
-}
-.ficha__acciones svg {
-    height: 1.4rem;
 }
 .ficha__acciones button[data-leido="true"] > .ficha__leido {
     display: inline;
