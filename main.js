@@ -45,10 +45,15 @@ function agregarLibro(...informacion) {
     index++
 }
 
+function buscarIndiceLibro(indice) {
+    return biblioteca.findIndex(elemento => elemento.indice === +indice)
+}
+
 function crearFicha(indice){
     const ficha = document.createElement('div')
     ficha.classList.add('ficha')
     ficha.setAttribute('data-leido', biblioteca[indice].leido)
+    ficha.setAttribute('data-indice', biblioteca[indice].indice)
     ficha.setAttribute('tabindex', '0')
 
     const imagen = document.createElement('img')
@@ -128,8 +133,13 @@ function crearFicha(indice){
     lecturaBTN.appendChild(lecturaSR)
     lecturaBTN.appendChild(leerSpan)
     lecturaBTN.appendChild(leidoSpan)
-    lecturaBTN.addEventListener('click', () => {
+    lecturaBTN.addEventListener('click', function() {
+        let haSidoLeido = this.closest('.ficha').getAttribute('data-leido')
+        haSidoLeido = haSidoLeido === 'true' ? 'false' : 'true'
+        this.closest('.ficha').setAttribute('data-leido', haSidoLeido)
 
+        const indice = this.closest('.ficha').getAttribute('data-indice')
+        biblioteca[buscarIndiceLibro(indice)].leido = haSidoLeido
     })
 
     const editarBTN = document.createElement('button')
@@ -153,6 +163,11 @@ function crearFicha(indice){
     borrarSVG.textContent = 'delete'
     borrarBTN.appendChild(borrarSR)
     borrarBTN.appendChild(borrarSVG)
+    borrarBTN.addEventListener('click', function() {
+        const indice = this.closest('.ficha').getAttribute('data-indice')
+        biblioteca.splice(buscarIndiceLibro(indice), 1)
+        this.closest('.ficha').remove()
+    })
     
     acciones.appendChild(irBTN)
     acciones.appendChild(lecturaBTN)
@@ -168,6 +183,8 @@ function crearFicha(indice){
     displayLibros.insertBefore(ficha, displayLibros.firstElementChild)
 }
 
+
+
 agregarLibro(
     'El artesano',
     'Richard Sennet',
@@ -176,7 +193,7 @@ agregarLibro(
     460,
     2012,
     '',
-    true
+    'true'
 )
 
 agregarLibro(
@@ -187,13 +204,11 @@ agregarLibro(
     230,
     1987,
     '',
-    false
+    'false'
 )
 crearFicha(0)
 crearFicha(1)
-
 console.log(biblioteca)
-
 // comportamiento del modal
 btnNuevoLibro.addEventListener('click', () => {
    modalLibro.showModal() 
