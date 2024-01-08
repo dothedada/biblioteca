@@ -157,10 +157,14 @@ main {
     display: flex;
     flex-direction: column;
     border-radius: 1rem ;
+    box-shadow: 0 5px 15px 0 rgb(9, 10, 5);
 }
-.ficha:hover, .ficha:focus, .ficha:focus-within {
+.ficha:hover {
     transform: scale(1.05);
-    outline: none;
+}
+.ficha:focus-visible, .ficha:focus-within {
+    outline: solid 1px var(--primary);
+    outline-offset: 3px;
 }
 .ficha p {
     max-width: 55ch;
@@ -177,6 +181,7 @@ main {
 }
 .ficha[data-leido="false"] .ficha__imagen {
     mix-blend-mode: luminosity;
+    opacity: 0.5;
 }
 
 .ficha[data-leido="true"] .ficha__leido {
@@ -192,9 +197,6 @@ main {
     display: inline;
 }
 
-.ficha:hover > .ficha__imagen {
-    mix-blend-mode: normal;
-}
 .ficha__autoria{
     margin: 1rem;
     color: var(--background);

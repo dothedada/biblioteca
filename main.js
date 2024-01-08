@@ -23,8 +23,10 @@ btnGuardarLibro.addEventListener('click', () => {
     crearFicha(0)
 })
 
-const biblioteca = []
-let index = 0
+const biblioteca = localStorage.getItem('biblioteca') === null ? []
+    : JSON.parse(localStorage.getItem('biblioteca'))
+
+let index = biblioteca.length
 
 class Libro {
     constructor (titulo, autor, img, descripcion, extension, anno, url, leido) {
@@ -35,13 +37,18 @@ class Libro {
         this.anno = !anno ? '???' : anno
         this.leido = leido ?? false 
         this.descripcion = !descripcion ? '...' : descripcion
-        this.url = !url ? `https://google.com/search?q=${titulo}` : `http://${url}`
-        this.img = !img ? `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/300/200` : `https://${img}`
+        this.url = !url ? 
+            `https://google.com/search?q=${titulo.replace(' ','+')}+${autor.replace(' ','+')}`
+          : `http://${url}`
+        this.img = !img ?
+            `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/300/200`
+          : `https://${img}`
     }
 }
 
 function agregarLibro(...informacion) {
     biblioteca.unshift(new Libro(...informacion))
+    localStorage.setItem('biblioteca', JSON.stringify(biblioteca))
     index++
 }
 
@@ -140,6 +147,7 @@ function crearFicha(indice){
 
         const indice = this.closest('.ficha').getAttribute('data-indice')
         biblioteca[buscarIndiceLibro(indice)].leido = haSidoLeido
+        localStorage.setItem('biblioteca', JSON.stringify(biblioteca))
     })
 
     const editarBTN = document.createElement('button')
@@ -167,6 +175,7 @@ function crearFicha(indice){
         const indice = this.closest('.ficha').getAttribute('data-indice')
         biblioteca.splice(buscarIndiceLibro(indice), 1)
         this.closest('.ficha').remove()
+        localStorage.setItem('biblioteca', JSON.stringify(biblioteca))
     })
     
     acciones.appendChild(irBTN)
@@ -183,32 +192,11 @@ function crearFicha(indice){
     displayLibros.insertBefore(ficha, displayLibros.firstElementChild)
 }
 
+biblioteca.forEach((_, index) => crearFicha(index))
 
-
-agregarLibro(
-    'El artesano',
-    'Richard Sennet',
-    '',
-    'El artesano de Sennett aboga por la excelencia, conexión con el trabajo y el valor del proceso en la era moderna.',
-    460,
-    2012,
-    '',
-    'true'
-)
-
-agregarLibro(
-    'La insoportable levedad del ser',
-    'Milan Kundera',
-    'img2.rtve.es/v/4836164/?w=1600',
-    'Kundera explora la vida, el amor y la insignificancia existencial en un mundo de decisiones y consecuencias ligeras.',
-    230,
-    1987,
-    '',
-    'false'
-)
-crearFicha(0)
-crearFicha(1)
-console.log(biblioteca)
+// const patito = JSON.stringify(biblioteca)
+// console.log(patito)
+// console.log(JSON.parse(patito))
 // comportamiento del modal
 btnNuevoLibro.addEventListener('click', () => {
    modalLibro.showModal() 
