@@ -3,33 +3,21 @@ const modalLibro = document.getElementById('modalLibro')
 const btnGuardarLibro = document.getElementById('guardarLibroNuevo')
 const btnCerrarModal = document.getElementById('cerrarModal')
 const displayLibros = document.getElementById('libreria')
-
+// elementos del formulario
 const nuevoLibro = document.querySelectorAll('#nuevoLibro input')
 const nuevoLibroDescripcion = document.querySelector('#nuevoLibro textarea')
 
-btnGuardarLibro.addEventListener('click', () => {
-    agregarLibro(
-        nuevoLibro[0].value, // libro
-        nuevoLibro[1].value, // autora
-        nuevoLibro[2].value, // url portada
-        nuevoLibroDescripcion.value, // descripcion
-        nuevoLibro[3].value, // páginas
-        nuevoLibro[4].value, // fecha de escritura
-        nuevoLibro[5].value, // url del libro
-        nuevoLibro[6].checked // leído
-    )
-    console.log(biblioteca)
-    modalLibro.close()
-    crearFicha(0)
-})
-
-const biblioteca = localStorage.getItem('biblioteca') === null ? []
-    : JSON.parse(localStorage.getItem('biblioteca'))
-let index = biblioteca.length
+const biblioteca = []
+let index = localStorage.length
+for(let i = 0; i < index; i++) {
+    if(/^libro_/.test(localStorage.key(i))) {
+        biblioteca.unshift(JSON.parse(localStorage.getItem(`libro_${i}`)))
+    }
+}
 
 class Libro {
     constructor (titulo, autor, img, descripcion, extension, anno, url, leido) {
-        this.indice = index
+        this.indice = `libro_${index}-${Math.floor(Math.random()*10000000)}`
         this.titulo = titulo
         this.autor = autor
         this.extension = !extension ? '???' : extension
@@ -51,12 +39,13 @@ class Libro {
 
 function agregarLibro(...informacion) {
     biblioteca.unshift(new Libro(...informacion))
-    localStorage.setItem('biblioteca', JSON.stringify(biblioteca))
+    console.log(biblioteca[0].indice)
+    localStorage.setItem(biblioteca[0].indice, JSON.stringify(biblioteca[0]))
     index++
 }
 
 function buscarIndiceLibro(indice) {
-    return biblioteca.findIndex(elemento => elemento.indice === +indice)
+    return biblioteca.findIndex(elemento => elemento.indice === indice)
 }
 
 function crearFicha(indice){
@@ -64,7 +53,7 @@ function crearFicha(indice){
     ficha.classList.add('ficha')
     ficha.setAttribute('data-leido', biblioteca[indice].leido)
     ficha.setAttribute('data-indice', biblioteca[indice].indice)
-    ficha.setAttribute('tabindex', '0')
+    // ficha.setAttribute('tabindex', '0')
 
     const imagen = document.createElement('img')
     imagen.src = biblioteca[indice].img
@@ -150,7 +139,7 @@ function crearFicha(indice){
 
         const indice = this.closest('.ficha').getAttribute('data-indice')
         biblioteca[buscarIndiceLibro(indice)].leido = haSidoLeido
-        localStorage.setItem('biblioteca', JSON.stringify(biblioteca))
+        localStorage.setItem(indice, JSON.stringify(biblioteca[buscarIndiceLibro(indice)]))
     })
 
     const editarBTN = document.createElement('button')
@@ -164,7 +153,14 @@ function crearFicha(indice){
     editarBTN.appendChild(editarSR)
     editarBTN.appendChild(editarSVG)
     editarBTN.addEventListener('click', function() {
+
         const indice = this.closest('.ficha').getAttribute('data-indice')
+
+        // la bibioteca completa como array al localstorage o cada libro por separado?
+
+        // llamar los valores a partir de la ficha a editar
+        // asignar los valores al campo del formulario
+        // crear una variable para saber si edita o crea en el mismo formulario
 
 
         console.log(nuevoLibro[0].value) // = , // libro
@@ -192,8 +188,9 @@ function crearFicha(indice){
     borrarBTN.addEventListener('click', function() {
         const indice = this.closest('.ficha').getAttribute('data-indice')
         biblioteca.splice(buscarIndiceLibro(indice), 1)
+        localStorage.removeItem(indice)
         this.closest('.ficha').remove()
-        localStorage.setItem('biblioteca', JSON.stringify(biblioteca))
+        // localStorage.setItem('biblioteca', JSON.stringify(biblioteca))
     })
     
     acciones.appendChild(irBTN)
@@ -212,6 +209,20 @@ function crearFicha(indice){
 
 biblioteca.forEach((_, index) => crearFicha(index))
 
+btnGuardarLibro.addEventListener('click', () => {
+    agregarLibro(
+        nuevoLibro[0].value, // libro
+        nuevoLibro[1].value, // autora
+        nuevoLibro[2].value, // url portada
+        nuevoLibroDescripcion.value, // descripcion
+        nuevoLibro[3].value, // páginas
+        nuevoLibro[4].value, // fecha de escritura
+        nuevoLibro[5].value, // url del libro
+        nuevoLibro[6].checked // leído
+    )
+    modalLibro.close()
+    crearFicha(0)
+})
 
 // comportamiento del modal
 btnNuevoLibro.addEventListener('click', () => {
