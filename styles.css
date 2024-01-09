@@ -263,28 +263,29 @@ dialog {
     width: clamp(350px, 50%, 500px);
     overflow: scroll;
     background-color: var(--background);
-    border: none;
+    border: solid 1px var(--primary);
     border-radius: 1rem;
     color: var(--text);
-    padding: 1.5rem;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 5px 20px 0 rgb(9, 10, 5);
 }
 fieldset {
     border: none;
 }
 fieldset + fieldset {
-    margin: 1rem 0 0;
+    margin: 2rem 0 0;
 }
 fieldset > div {
     display: flex;
     flex-direction: column;
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.6rem;
 }
 #nuevoLibro input:not([type="checkbox"]),
 #nuevoLibro textarea {
     margin: 0.3rem 0 0;
     border: none;
     background-color: var(--primary);
-    padding: 0.2rem 0.5rem;
+    padding: 0.5rem 1rem;
     color: var(--background);
     font-family: var(--funte-titulos);
     font-size: 1rem;
