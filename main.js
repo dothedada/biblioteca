@@ -1,59 +1,72 @@
 const btnNuevoLibro = document.getElementById('nuevoLibro')
+const btnNuevoLibroMain = document.querySelector('.nuevoLibroMain')
 const modalLibro = document.getElementById('modalLibro')
 const btnGuardarLibro = document.getElementById('guardarLibroNuevo')
 const btnCerrarModal = document.getElementById('cerrarModal')
 const displayLibros = document.getElementById('libreria')
 // elementos del formulario
-const nuevoLibro = document.querySelectorAll('#nuevoLibro input')
-const nuevoLibroDescripcion = document.querySelector('#nuevoLibro textarea')
-
+const libroInformacion = document.querySelectorAll('#nuevoLibro input')
+const libroDescripcion = document.querySelector('#nuevoLibro textarea')
+// Creación del array que contiene la biblioteca
+// a partir de los libros guardados en el localStorage
+let indiceBiblioteca = localStorage.length
+let indiceEdicion = ''
 const biblioteca = []
-let index = localStorage.length
-for(let i = 0; i < index; i++) {
-    if(/^libro_/.test(localStorage.key(i))) {
-        biblioteca.unshift(JSON.parse(localStorage.getItem(`libro_${i}`)))
+const llaves = Object.keys(localStorage)
+for(const llave of llaves) {
+    if(!/^libro_/.test(llave)) continue
+    biblioteca.unshift(JSON.parse(localStorage.getItem(llave)))
+}
+
+// 0. revisar que no se espaguetifique el código
+// 1. finalizar funcion de edicion de libros
+// 1.1. revisar registro en el local storage
+// 1.2. finalizar actualización de fichas apenas termina la edición
+// 2. corregir registro de urls, para evitar el http repetido
+// 3. habilitar el panel de ordenar libros
+// 4. crear botón de conejitos para "pre-poblar" la tabla en el demo
+// 5. exportar el JSON del local storage
+// 6. crear la opcion de cargar el archivo de biblioteca
+
+function Libro (titulo, autor, img, descripcion, extension, anno, url, leido) {
+    // EL random del indice es para reducir las posibilidad de conflictos
+    // con las llaves de los objetos en el localStorage
+    this.indice = !indiceEdicion ? 
+        `libro_${indiceBiblioteca}-${Math.floor(Math.random()*100000)}`
+        : indiceEdicion
+    this.titulo = titulo
+    this.autor = autor
+    this.extension = !extension ? '???' : extension
+    this.anno = !anno ? '???' : anno
+    this.leido = leido ?? false 
+    this.descripcion = !descripcion ? '...' : descripcion
+    this.url = !url ? 
+        `https://google.com/search?q=${titulo.replace(' ','+')}+${autor.replace(' ','+')}`
+        : `http://${url.replace(/^http(s:|:)\/\//, '')}`
+    this.img = !img ?
+        `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/300/200`
+        : `http://${img.replace(/^http(s:|:)\/\//, '')}`
+}
+
+function agregarEditarLibroLS(...informacion) {
+    if(!indiceEdicion) {
+        biblioteca.unshift(new Libro(...informacion))
+        localStorage.setItem(biblioteca[0].indice, JSON.stringify(biblioteca[0]))
+        indiceBiblioteca++
+    } else {
+        localStorage.setItem(indiceEdicion, JSON.stringify(new Libro(...informacion)))
     }
 }
 
-class Libro {
-    constructor (titulo, autor, img, descripcion, extension, anno, url, leido) {
-        this.indice = `libro_${index}-${Math.floor(Math.random()*10000000)}`
-        this.titulo = titulo
-        this.autor = autor
-        this.extension = !extension ? '???' : extension
-        this.anno = !anno ? '???' : anno
-        this.leido = leido ?? false 
-        this.descripcion = !descripcion ? '...' : descripcion
-        this.url = !url ? 
-            `https://google.com/search?q=${
-                titulo.replace(' ','+')
-            }+${
-                autor.replace(' ','+')
-            }`
-            : `http://${url}`
-        this.img = !img ?
-            `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/300/200`
-            : `https://${img}`
-    }
+function buscarIndiceBiblioteca(indiceLibro) {
+    return biblioteca.findIndex(elemento => elemento.indice === indiceLibro)
 }
 
-function agregarLibro(...informacion) {
-    biblioteca.unshift(new Libro(...informacion))
-    console.log(biblioteca[0].indice)
-    localStorage.setItem(biblioteca[0].indice, JSON.stringify(biblioteca[0]))
-    index++
-}
-
-function buscarIndiceLibro(indice) {
-    return biblioteca.findIndex(elemento => elemento.indice === indice)
-}
-
-function crearFicha(indice){
+function crearFichaDOM(indice){
     const ficha = document.createElement('div')
     ficha.classList.add('ficha')
     ficha.setAttribute('data-leido', biblioteca[indice].leido)
     ficha.setAttribute('data-indice', biblioteca[indice].indice)
-    // ficha.setAttribute('tabindex', '0')
 
     const imagen = document.createElement('img')
     imagen.src = biblioteca[indice].img
@@ -138,8 +151,11 @@ function crearFicha(indice){
         this.closest('.ficha').setAttribute('data-leido', haSidoLeido)
 
         const indice = this.closest('.ficha').getAttribute('data-indice')
-        biblioteca[buscarIndiceLibro(indice)].leido = haSidoLeido
-        localStorage.setItem(indice, JSON.stringify(biblioteca[buscarIndiceLibro(indice)]))
+        biblioteca[buscarIndiceBiblioteca(indice)].leido = haSidoLeido
+        localStorage.setItem(
+            indice,
+            JSON.stringify(biblioteca[buscarIndiceBiblioteca(indice)])
+        )
     })
 
     const editarBTN = document.createElement('button')
@@ -153,26 +169,20 @@ function crearFicha(indice){
     editarBTN.appendChild(editarSR)
     editarBTN.appendChild(editarSVG)
     editarBTN.addEventListener('click', function() {
-
         const indice = this.closest('.ficha').getAttribute('data-indice')
+        indiceEdicion = indice
 
-        // la bibioteca completa como array al localstorage o cada libro por separado?
+        libroInformacion[0].value = biblioteca[buscarIndiceBiblioteca(indice)].titulo
+        libroInformacion[1].value = biblioteca[buscarIndiceBiblioteca(indice)].autor
+        libroInformacion[2].value = biblioteca[buscarIndiceBiblioteca(indice)].img
+        libroDescripcion.value = biblioteca[buscarIndiceBiblioteca(indice)].descripcion
+        libroInformacion[3].value = biblioteca[buscarIndiceBiblioteca(indice)].extension
+        libroInformacion[4].value = biblioteca[buscarIndiceBiblioteca(indice)].anno
+        libroInformacion[5].value = biblioteca[buscarIndiceBiblioteca(indice)].url
+        const haSidoLeido = /true/.test(biblioteca[buscarIndiceBiblioteca(indice)].leido)
+        libroInformacion[6].checked = haSidoLeido
 
-        // llamar los valores a partir de la ficha a editar
-        // asignar los valores al campo del formulario
-        // crear una variable para saber si edita o crea en el mismo formulario
-
-
-        console.log(nuevoLibro[0].value) // = , // libro
-        // nuevoLibro[1].value, // autora
-        // nuevoLibro[2].value, // url portada
-        // nuevoLibroDescripcion.value, // descripcion
-        // nuevoLibro[3].value, // páginas
-        // nuevoLibro[4].value, // fecha de escritura
-        // nuevoLibro[5].value, // url del libro
-        // nuevoLibro[6].checked // leído
-
-        modalLibro.showModal()
+        abrirModal()
     })
 
     const borrarBTN = document.createElement('button')
@@ -187,7 +197,7 @@ function crearFicha(indice){
     borrarBTN.appendChild(borrarSVG)
     borrarBTN.addEventListener('click', function() {
         const indice = this.closest('.ficha').getAttribute('data-indice')
-        biblioteca.splice(buscarIndiceLibro(indice), 1)
+        biblioteca.splice(buscarIndiceBiblioteca(indice), 1)
         localStorage.removeItem(indice)
         this.closest('.ficha').remove()
         // localStorage.setItem('biblioteca', JSON.stringify(biblioteca))
@@ -207,29 +217,68 @@ function crearFicha(indice){
     displayLibros.insertBefore(ficha, displayLibros.firstElementChild)
 }
 
-biblioteca.forEach((_, index) => crearFicha(index))
+biblioteca.forEach((_, index) => crearFichaDOM(index))
 
 btnGuardarLibro.addEventListener('click', () => {
-    agregarLibro(
-        nuevoLibro[0].value, // libro
-        nuevoLibro[1].value, // autora
-        nuevoLibro[2].value, // url portada
-        nuevoLibroDescripcion.value, // descripcion
-        nuevoLibro[3].value, // páginas
-        nuevoLibro[4].value, // fecha de escritura
-        nuevoLibro[5].value, // url del libro
-        nuevoLibro[6].checked // leído
+    agregarEditarLibroLS(
+        libroInformacion[0].value, // libro
+        libroInformacion[1].value, // autora
+        libroInformacion[2].value, // url portada
+        libroDescripcion.value, // descripcion
+        libroInformacion[3].value, // páginas
+        libroInformacion[4].value, // fecha de escritura
+        libroInformacion[5].value, // url del libro
+        libroInformacion[6].checked // leído
     )
+    if(!indiceEdicion){
+        crearFichaDOM(0)
+    } else {
+        // actualización de la biblioteca
+        const indice = buscarIndiceBiblioteca(indiceEdicion)
+        biblioteca[indice] = JSON.parse(localStorage.getItem(indiceEdicion))
+        const fichaInfo = biblioteca[indice]
+        console.log(fichaInfo.img)
+
+        // Actualización de los elementos
+        const fichaEdicion = document.querySelector(`[data-indice="${indiceEdicion}"]`)
+        // titulo
+        fichaEdicion.querySelector('h2').textContent = fichaInfo.titulo
+        // Autora
+        fichaEdicion.querySelectorAll('p')[0].textContent = fichaInfo.autor
+        // portada
+        fichaEdicion.querySelector('img').setAttribute('src', fichaInfo.img)
+        // descripcion
+        fichaEdicion.querySelectorAll('p')[2].textContent = fichaInfo.descripcion
+        // paginas
+        fichaEdicion.querySelectorAll('small')[0].textContent = fichaInfo.extension
+        // fecha de escritura
+        fichaEdicion.querySelectorAll('small')[1].textContent = fichaInfo.anno
+        // URL
+        fichaEdicion.querySelector('a').setAttribute('href', fichaInfo.url)
+        // Leido
+        fichaEdicion.setAttribute('data-leido', fichaInfo.leido)
+
+
+    }
+    indiceEdicion = ''
     modalLibro.close()
-    crearFicha(0)
 })
 
 // comportamiento del modal
-btnNuevoLibro.addEventListener('click', () => {
-   modalLibro.showModal() 
-})
+function abrirModal () {
+    if(!indiceEdicion) {
+        for(let i = 0; i < 6; i++) libroInformacion[i].value = ''
+        libroDescripcion.value = '' 
+        libroInformacion[6].checked = false 
+    }
+    btnGuardarLibro.textContent = !indiceEdicion ? 'Guardar' : 'Guardar cambios'
+    modalLibro.showModal() 
+}
 
+btnNuevoLibro.addEventListener('click', abrirModal)
+btnNuevoLibroMain.addEventListener('click', abrirModal)
 btnCerrarModal.addEventListener('click', () => {
+    indiceEdicion = ''
     modalLibro.close()
 })
 

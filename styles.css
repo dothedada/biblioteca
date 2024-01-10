@@ -241,15 +241,19 @@ main {
     transition: opacity 0.1s ease-in-out,
         transform 0.2s ease-in-out;
 }
-.nuevoLibroMain:hover {
+.nuevoLibroMain:hover,
+.nuevoLibroMain:focus-visible {
     opacity: 1;
     transform: scale(1.05);
+    background-color: var(--hover);
+    color: var(--background);
 }
 .nuevoLibroMain span:last-child {
     font-size: 15rem;
     transition: transform 0.2s ease-in-out;
 }
-.nuevoLibroMain:hover span:last-child {
+.nuevoLibroMain:hover span:last-child,
+.nuevoLibroMain:focus-visible span:last-child {
     transform: rotate(90deg);
 }
 
