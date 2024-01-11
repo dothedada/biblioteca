@@ -4,14 +4,15 @@ const modalLibro = document.getElementById('modalLibro')
 const btnGuardarLibro = document.getElementById('guardarLibroNuevo')
 const btnCerrarModal = document.getElementById('cerrarModal')
 const displayLibros = document.getElementById('libreria')
+const displayLibrosOrden = document.querySelectorAll('#ordenarBiblioteca input')
 // elementos del formulario
 const libroInformacion = document.querySelectorAll('#nuevoLibro input')
 const libroDescripcion = document.querySelector('#nuevoLibro textarea')
 const libroValidacion = document.querySelectorAll('#nuevoLibro .validacion')
+
 // Creación del array que contiene la biblioteca
-// a partir de los libros guardados en el localStorage
 let indiceBiblioteca = localStorage.length
-let indiceEdicion = ''
+let indiceEdicion = '' // Cuando contiene un índice cambia el comportamiento de guardado
 const biblioteca = []
 const llaves = Object.keys(localStorage)
 for(const llave of llaves) {
@@ -19,24 +20,17 @@ for(const llave of llaves) {
     biblioteca.unshift(JSON.parse(localStorage.getItem(llave)))
 }
 
-// 2. Validacion formulario
-// 3. habilitar el panel de ordenar libros
-// 4. crear botón de conejitos para "pre-poblar" la tabla en el demo
-// 5. exportar el JSON del local storage
-// 6. crear la opcion de cargar el archivo de biblioteca
 
 function Libro (titulo, autor, img, descripcion, extension, anno, url, leido) {
-    // EL random del indice es para reducir las posibilidad de conflictos
-    // con las llaves de los objetos en el localStorage
     this.indice = !indiceEdicion ? 
         `libro_${indiceBiblioteca}-${Math.floor(Math.random()*100000)}`
         : indiceEdicion
     this.titulo = titulo
     this.autor = autor
-    this.extension = !extension ? '???' : extension
-    this.anno = !anno ? '???' : anno
+    this.extension = !extension ? '' : extension
+    this.anno = !anno ? '' : anno
     this.leido = leido ?? false 
-    this.descripcion = !descripcion ? '...' : descripcion
+    this.descripcion = !descripcion ? '' : descripcion
     this.url = !url ? 
         `https://google.com/search?q=${titulo.replace(' ','+')}+${autor.replace(' ','+')}`
         : `http://${url.replace(/^http(s:|:)\/\//, '')}`
@@ -81,8 +75,9 @@ function crearFichaDOM(indice){
     autor.textContent = biblioteca[indice].autor
     autoria.appendChild(titulo)
     autoria.appendChild(autor)
+
     // Información del libro
-    const informacion = document.createElement('p')
+    const informacion = document.createElement('div')
     const extension = document.createElement('small')
     extension.textContent = `${biblioteca[indice].extension} páginas`
     const anno = document.createElement('small')
@@ -91,6 +86,7 @@ function crearFichaDOM(indice){
     informacion.appendChild(extension)
     informacion.appendChild(separador)
     informacion.appendChild(anno)
+
     // descripción del libro
     const sinopsis = document.createElement('div')
     sinopsis.classList.add('ficha__informacion')
@@ -169,7 +165,6 @@ function crearFichaDOM(indice){
     editarBTN.addEventListener('click', function() {
         const indice = this.closest('.ficha').getAttribute('data-indice')
         indiceEdicion = indice
-        // precarga de info en formulario
         libroInformacion[0].value = biblioteca[buscarIndiceBiblioteca(indice)].titulo
         libroInformacion[1].value = biblioteca[buscarIndiceBiblioteca(indice)].autor
         libroInformacion[2].value = biblioteca[buscarIndiceBiblioteca(indice)].img
@@ -211,8 +206,19 @@ function crearFichaDOM(indice){
     displayLibros.insertBefore(ficha, displayLibros.firstElementChild)
 }
 
-biblioteca.forEach((_, index) => crearFichaDOM(index))
-console.log(!/^[0-9]+$/.test('a'))
+function abrirModal () {
+    for(const validacion of libroValidacion) {
+        validacion.textContent = ''
+    }
+    if(!indiceEdicion) {
+        for(let i = 0; i < 6; i++) libroInformacion[i].value = ''
+        libroDescripcion.value = '' 
+        libroInformacion[6].checked = false 
+    }
+    btnGuardarLibro.textContent = !indiceEdicion ? 'Guardar' : 'Guardar cambios'
+    modalLibro.showModal() 
+}
+
 function validarFormulario() {
     let valido = true
     const regexURL = new RegExp(/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/)
@@ -220,39 +226,55 @@ function validarFormulario() {
         validacion.textContent = ''
     }
     for(let i = 0; i < 2; i++) {
+        const a = i === 0 ? 2 : 5
         if(!libroInformacion[i].value) {
             libroValidacion[i].textContent = 'Este campo es obligatorio.'
             valido = false
         }
-        if(!/^[0-9]+$/.test(libroInformacion[3 + i].value)){
-            console.log(libroInformacion[3 + i].value)
+        if(libroInformacion[a].value && !regexURL.test(libroInformacion[a].value)) {
+            libroValidacion[a].textContent = 'Ingresa una URL válida o deja el campo vacío'
+            valido = false
+        }
+        if(!/^[0-9]+$/.test(libroInformacion[3+i].value)){
             if(libroInformacion[3+i].value === '') continue
-            libroValidacion[3+i].textContent = 'Ingresa un número usando dígitos'
+            libroValidacion[3+i].textContent = 'Ingresa un número usando dígitos o deja el campo vacío'
             valido = false
         }
     }
-    if(libroInformacion[2].value && !regexURL.test(libroInformacion[2].value)) {
-        libroValidacion[2].textContent = 'Ingresa una URL válida o deja el campo vacío'
-        valido = false
-    }
-    if(libroInformacion[5].value && !regexURL.test(libroInformacion[5].value)) {
-        libroValidacion[5].textContent = 'Ingresa una URL válida o deja el campo vacío'
-        valido = false
-    }
     if(!valido) libroValidacion[6].textContent = 'Revisa que los campos se encuentren diligenciados correctamente'
-
-
-        // libroInformacion[1].value, // autora
-        // libroInformacion[2].value, // url portada
-        // libroDescripcion.value, // descripcion
-        // libroInformacion[3].value, // páginas
-        // libroInformacion[4].value, // fecha de escritura
-        // libroInformacion[5].value, // url del libro
-        // libroInformacion[6].checked // leído
 
     return valido
 }
 
+function ordenarBiblioteca() {
+    const ordenarPor = Array.from(displayLibrosOrden)
+        .find(elem => elem.checked)
+    const asc = displayLibrosOrden[displayLibrosOrden.length - 1].checked
+    if(ordenarPor.id === 'nombre'){
+        biblioteca.sort((a, b) => {
+            if(a.titulo.toLowerCase() < b.titulo.toLowerCase()) return asc ? 1 : -1
+            if(a.titulo.toLowerCase() > b.titulo.toLowerCase()) return asc ? -1 : 1
+            return 0
+        })
+    }
+    if(ordenarPor.id === 'autor'){
+        biblioteca.sort((a, b) => {
+            if(a.autor.toLowerCase() < b.autor.toLowerCase()) return asc ? 1 : -1
+            if(a.autor.toLowerCase() > b.autor.toLowerCase()) return asc ? -1 : 1
+            return 0
+        })
+    }
+    if(ordenarPor.id === 'anno'){
+        biblioteca.sort((a, b) => asc ? +b.anno - +a.anno : +a.anno - b.anno)
+    } 
+    displayLibros.textContent = ''
+    biblioteca.forEach((_, index) => crearFichaDOM(index))
+}
+ordenarBiblioteca()
+
+for(const orden of displayLibrosOrden) {
+    orden.addEventListener('change', () => ordenarBiblioteca())
+}
 btnGuardarLibro.addEventListener('click', () => {
     if(!validarFormulario()) return
     agregarEditarLibroLS( // tomar info del formulario
@@ -284,38 +306,9 @@ btnGuardarLibro.addEventListener('click', () => {
     }
     modalLibro.close()
 })
-
-// comportamiento del modal
-function abrirModal () {
-    for(const validacion of libroValidacion) {
-        validacion.textContent = ''
-    }
-    if(!indiceEdicion) {
-        for(let i = 0; i < 6; i++) libroInformacion[i].value = ''
-        libroDescripcion.value = '' 
-        libroInformacion[6].checked = false 
-    }
-    btnGuardarLibro.textContent = !indiceEdicion ? 'Guardar' : 'Guardar cambios'
-    modalLibro.showModal() 
-}
-
 btnNuevoLibro.addEventListener('click', abrirModal)
 btnNuevoLibroMain.addEventListener('click', abrirModal)
 btnCerrarModal.addEventListener('click', () => {
     indiceEdicion = ''
     modalLibro.close()
 })
-
-// cerral modal al hacer clic por fuera del modal
-// modalLibro.addEventListener("click", e => {
-//     const modalDimensiones = modalLibro.getBoundingClientRect()
-//     if (
-//         e.clientX < modalDimensiones.left ||
-//         e.clientX > modalDimensiones.right ||
-//         e.clientY < modalDimensiones.top ||
-//         e.clientY > modalDimensiones.bottom
-//     ) {
-//         modalLibro.close()
-//     }
-// })
-
