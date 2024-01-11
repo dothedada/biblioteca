@@ -284,6 +284,11 @@ fieldset > div {
     flex-direction: column;
     margin: 0 0 0.6rem;
 }
+fieldset:last-child {
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+}
 #nuevoLibro input:not([type="checkbox"]),
 #nuevoLibro textarea {
     margin: 0.3rem 0 0;
@@ -320,10 +325,10 @@ fieldset > div {
 #nuevoLibro input[type="checkbox"]:not(:checked) ~ span:last-child {
     display: inline;
 } 
-fieldset:last-child {
-    display: flex;
-    gap: 2rem;
-    justify-content: space-between;
+#nuevoLibro .validacion {
+    color: var(--hover);
+    font-size: 1rem;
+    margin: 0.2rem 1rem;
 }
 #cerrarModal {
    background: none;

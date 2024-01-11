@@ -57,12 +57,14 @@
 
                 <div>
                     <label for="titulo">¿Cuál es el nombre del libro? (Obligatorio)</label>
-                    <input id="titulo" type="text" required>
+                    <input id="titulo" type="text">
+                    <span class="validacion"></span>
                 </div>
 
                 <div>
                     <label for="autora">¿Quién lo escirbió? (Obligatorio)</label>
-                    <input id="autora" type="text" required>
+                    <input id="autora" type="text">
+                    <span class="validacion"></span>
                 </div>
             </fieldset>
 
@@ -72,6 +74,7 @@
                 <div>
                     <label for="imagen">¿Donde encuentro la portada?</label>
                     <input id="imagen" type="url" placeholder="direccionDeLaImagen.com">
+                    <span class="validacion"></span>
                 </div>
 
                 <div>
@@ -81,17 +84,20 @@
 
                 <div>
                     <label for="extension">¿Cuántas páginas tiene?</label>
-                    <input id="extension" type="number" inputmode="numeric">
+                    <input id="extension" type="text" min="1" inputmode="numeric">
+                    <span class="validacion"></span>
                 </div>
 
                 <div>
                     <label for="anno">¿Cuándo fue escrito?</label>
-                    <input id="anno" type="number" inputmode="numeric">
+                    <input id="anno" type="text" min="1" inputmode="numeric">
+                    <span class="validacion"></span>
                 </div>
 
                 <div>
                     <label for="web">¿Donde puedo encontrarlo?</label>
                     <input id="web" type="url" placeholder="direccionDelLibro.com">
+                    <span class="validacion"></span>
                 </div>
 
                 <div>
@@ -101,11 +107,11 @@
                         <span>No lo he leído</span>
                     </label>
                 </div>
+                <div class="validacion"></div>
             </fieldset>
 
             <fieldset>
                 <legend class="sr-only">Acciones:</legend>
-
                 <button id="guardarLibroNuevo" type="button">Guardar</button>
                 <button id="cerrarModal" type="button">Cancelar</button>
             </fieldset>
