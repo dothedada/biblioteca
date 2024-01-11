@@ -20,7 +20,6 @@ for(const llave of llaves) {
     biblioteca.unshift(JSON.parse(localStorage.getItem(llave)))
 }
 
-
 function Libro (titulo, autor, img, descripcion, extension, anno, url, leido) {
     this.indice = !indiceEdicion ? 
         `libro_${indiceBiblioteca}-${Math.floor(Math.random()*100000)}`
@@ -77,12 +76,14 @@ function crearFichaDOM(indice){
     autoria.appendChild(autor)
 
     // Información del libro
-    const informacion = document.createElement('div')
+    const informacion = document.createElement('p')
     const extension = document.createElement('small')
-    extension.textContent = `${biblioteca[indice].extension} páginas`
+    extension.textContent = biblioteca[indice].extension
+    const separador = document.createElement('small')
+    if(extension.textContent !== '') separador.textContent = ' páginas '
     const anno = document.createElement('small')
     anno.textContent = biblioteca[indice].anno
-    const separador = document.createTextNode(' · ')
+    if(anno.textContent !== '') separador.textContent += ' | '
     informacion.appendChild(extension)
     informacion.appendChild(separador)
     informacion.appendChild(anno)
@@ -226,7 +227,7 @@ function validarFormulario() {
         validacion.textContent = ''
     }
     for(let i = 0; i < 2; i++) {
-        const a = i === 0 ? 2 : 5
+        const a = i === 0 ? 2 : 5 // magicNumbersssss
         if(!libroInformacion[i].value) {
             libroValidacion[i].textContent = 'Este campo es obligatorio.'
             valido = false
@@ -268,10 +269,24 @@ function ordenarBiblioteca() {
         biblioteca.sort((a, b) => asc ? +b.anno - +a.anno : +a.anno - b.anno)
     } 
     displayLibros.textContent = ''
+    const btnNuevoMain = document.createElement('button')
+    btnNuevoMain.classList.add('nuevoLibroMain')
+    const btnNuevoMainSR = document.createElement('span')
+    btnNuevoMainSR.classList.add('sr-only')
+    btnNuevoMainSR.textContent = 'Agregar un libro'
+    const btnNuevoMainSVG = document.createElement('span')
+    btnNuevoMainSVG.classList.add('material-symbols-outlined')
+    btnNuevoMainSVG.textContent = 'add_circle'
+    btnNuevoMain.appendChild(btnNuevoMainSR)
+    btnNuevoMain.appendChild(btnNuevoMainSVG)
+    displayLibros.appendChild(btnNuevoMain)
+
     biblioteca.forEach((_, index) => crearFichaDOM(index))
 }
+// precarga
 ordenarBiblioteca()
 
+// asignación de botones principales
 for(const orden of displayLibrosOrden) {
     orden.addEventListener('change', () => ordenarBiblioteca())
 }
@@ -299,7 +314,15 @@ btnGuardarLibro.addEventListener('click', () => {
         fichaEdicion.querySelector('img').setAttribute('src', fichaInfo.img)
         fichaEdicion.querySelectorAll('p')[2].textContent = fichaInfo.descripcion
         fichaEdicion.querySelectorAll('small')[0].textContent = fichaInfo.extension
-        fichaEdicion.querySelectorAll('small')[1].textContent = fichaInfo.anno
+        if(fichaInfo.extension !== ''){
+            fichaEdicion.querySelectorAll('small')[1].textContent = ' páginas'
+        } else {
+            fichaEdicion.querySelectorAll('small')[1].textContent = ''
+        }
+        fichaEdicion.querySelectorAll('small')[2].textContent = fichaInfo.anno
+        if(fichaInfo.anno !== '') {
+            fichaEdicion.querySelectorAll('small')[1].textContent += ' | '
+        } 
         fichaEdicion.querySelector('a').setAttribute('href', fichaInfo.url)
         fichaEdicion.setAttribute('data-leido', fichaInfo.leido)
         indiceEdicion = ''
