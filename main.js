@@ -1,5 +1,5 @@
 const btnNuevoLibro = document.getElementById('nuevoLibro')
-const btnNuevoLibroMain = document.querySelector('.nuevoLibroMain')
+let btnNuevoLibroMain = document.querySelector('.nuevoLibroMain')
 const modalLibro = document.getElementById('modalLibro')
 const btnGuardarLibro = document.getElementById('guardarLibroNuevo')
 const btnCerrarModal = document.getElementById('cerrarModal')
@@ -83,7 +83,7 @@ function crearFichaDOM(indice){
     if(extension.textContent !== '') separador.textContent = ' páginas '
     const anno = document.createElement('small')
     anno.textContent = biblioteca[indice].anno
-    if(anno.textContent !== '') separador.textContent += ' | '
+    if(extension.textContent !== '' && anno.textContent !== '') separador.textContent += ' | '
     informacion.appendChild(extension)
     informacion.appendChild(separador)
     informacion.appendChild(anno)
@@ -281,9 +281,23 @@ function ordenarBiblioteca() {
     btnNuevoMain.appendChild(btnNuevoMainSVG)
     displayLibros.appendChild(btnNuevoMain)
 
+    btnNuevoMain.addEventListener('click', abrirModal)
+
     biblioteca.forEach((_, index) => crearFichaDOM(index))
 }
 // precarga
+if(biblioteca.length === 0){
+    agregarEditarLibroLS(
+        'Matadero 5', 
+        'K. Vonnegut',
+        'https://nidodelibros.com/wp-content/uploads/2023/02/9780440180296.jpeg',
+        "Chronicles a soldier's time-jumping journey through war, trauma, and surreal alien experiences.",
+        '255',
+        '1969',
+        'https://nidodelibros.com/producto/slaughterhouse-five/',
+        'true'
+    )
+}
 ordenarBiblioteca()
 
 // asignación de botones principales
@@ -320,7 +334,7 @@ btnGuardarLibro.addEventListener('click', () => {
             fichaEdicion.querySelectorAll('small')[1].textContent = ''
         }
         fichaEdicion.querySelectorAll('small')[2].textContent = fichaInfo.anno
-        if(fichaInfo.anno !== '') {
+        if(fichaInfo.extension !== '' && fichaInfo.anno !== '') {
             fichaEdicion.querySelectorAll('small')[1].textContent += ' | '
         } 
         fichaEdicion.querySelector('a').setAttribute('href', fichaInfo.url)
@@ -330,7 +344,6 @@ btnGuardarLibro.addEventListener('click', () => {
     modalLibro.close()
 })
 btnNuevoLibro.addEventListener('click', abrirModal)
-btnNuevoLibroMain.addEventListener('click', abrirModal)
 btnCerrarModal.addEventListener('click', () => {
     indiceEdicion = ''
     modalLibro.close()
