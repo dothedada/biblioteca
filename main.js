@@ -1,38 +1,38 @@
-// borrar elementos en la libreria
-//
-// Renderizar elementos en el DOM
-// Conectar formulario y ficahas del DOM con
 const lib = (() => {
     const shelf = []
 
-    const index = () => localStorage.length
-
-    const load = () => {
-        const librosID = Object.keys(localStorage)
-
-        for (const libro of librosID) {
-            if (!/^ref_/.test(libro)) continue
-            shelf.unshift(JSON.parse(localStorage.getItem(libro)))
-        }
+    const librosID = Object.keys(localStorage)
+    for (const libro of librosID) {
+        if (!/^ref_/.test(libro)) continue
+        shelf.unshift(JSON.parse(localStorage.getItem(libro)))
     }
-    load()
 
-    const add = libro => {
-        shelf.unshift(libro)
-    } 
-
+    const index = () => localStorage.length
+    const add = libro => shelf.unshift(libro)
     const update = (reference, updatedBook) => {
         const arrIndex = shelf.findIndex(book => book.bookID === reference)
         shelf[arrIndex] = updatedBook
         console.table(shelf)
     }
-
     const remove = reference => {
         const arrIndex = shelf.findIndex(book => book.bookID === reference)
         shelf.splice(arrIndex, 1)
     }
+    const arrange = (by, order) => {
+        if (by === 'title') shelf.sort((a, b) => {
+            return a.title.localeCompare(b.title)
+        })
+        if (by === 'author') shelf.sort((a, b) => {
+            return a.author.localeCompare(b.author)
+        })
+        if (by === 'year') shelf.sort((a, b) => {
+            return +a.year - b.year
+        })
 
-    return { index, load, add, update, remove, shelf }
+        if(order)shelf.reverse()
+    }
+
+    return { index, add, update, remove, arrange, shelf}
 })()
 
 class Book {
@@ -52,8 +52,7 @@ class Book {
             : `http://${url.replace(/^http(s:|:)\/\//, '')}`
         this.read = read || false 
 
-        const { bookID } = this
-        localStorage.setItem(bookID, JSON.stringify(this))
+        localStorage.setItem(this.bookID, JSON.stringify(this))
         lib.add(this)
     }
 
@@ -62,20 +61,30 @@ class Book {
             if(!(attribute in this)) continue
             this[attribute] = editedBook_OBJ[attribute]
         }
-        const { bookID } = this
-        localStorage.setItem(bookID, JSON.stringify(this))
-        lib.update(bookID, this)
+        localStorage.setItem(this.bookID, JSON.stringify(this))
+        lib.update(this.bookID, this)
     }
 
-    remove () {
+    delete () {
         localStorage.removeItem(this.bookID)
         lib.remove(this.bookID)
     }
 }
 
+// Navbar
+// Habilitar modal para la creación de nuevos libros
+// habilitar la ordenada de los libros
+
+
+// Habilitar el modal para la creación o carga de un nuevo libro
+
+// Lib
+// Crear las fichas a partir de la libreria
+// habilitar funcionalidad de edicion
+//
 const book1 = new Book(
-    "test_Matadero 5",
-    "K. Vonnegut",
+    "Matadero 5",
+    "test_K. Vonnegut",
     "http://nidodelibros.com/wp-content/uploads/2023/02/9780440180296.jpeg",
     "Chronicles a soldier's time-jumping journey through war, trauma, and surreal alien experiences.",
     "255",
@@ -84,8 +93,8 @@ const book1 = new Book(
     "true"
 )
 const book2 = new Book(
-    "test_Richard Sennett",
     "El Artesano",
+    "test_Richard Sennett",
     "http://www.anagrama-ed.es/uploads/media/portadas/0001/26/52fd64b30c776d826b4b640a46dfff9c971a7ab7.jpeg",
     "El artesano de Sennett aboga por la excelencia, conexión con el trabajo y el valor del proceso en la era moderna.",
     "360",
@@ -93,3 +102,5 @@ const book2 = new Book(
     "http://www.anagrama-ed.es/libro/compactos/el-artesano/9788433960917/CM_768",
     "true"
 )
+
+console.table(lib.shelf)
