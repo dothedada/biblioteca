@@ -1,5 +1,3 @@
-// Añadir nuevos elementos en la librería
-// Editar elementos en la librería
 // borrar elementos en la libreria
 //
 // Renderizar elementos en el DOM
@@ -29,7 +27,12 @@ const lib = (() => {
         console.table(shelf)
     }
 
-    return { index, load, add, update }
+    const remove = reference => {
+        const arrIndex = shelf.findIndex(book => book.bookID === reference)
+        shelf.splice(arrIndex, 1)
+    }
+
+    return { index, load, add, update, remove, shelf }
 })()
 
 class Book {
@@ -66,6 +69,7 @@ class Book {
 
     remove () {
         localStorage.removeItem(this.bookID)
+        lib.remove(this.bookID)
     }
 }
 
