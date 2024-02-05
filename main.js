@@ -70,7 +70,6 @@ for (const barBTN of document.querySelectorAll('#orderLibrary > label')) {
 
 const modalBehavior = (() => {
     const modal = document.querySelector('#modalLibro')
-    const formInputText = document.querySelectorAll('form input:not([type="checkbox"])')
 
     // Abrir Modal new
     for (const newBookBTN of document.querySelectorAll('.newBook')) {
@@ -93,16 +92,16 @@ const modalBehavior = (() => {
         }
         console.log(document.querySelectorAll('[aria-invalid]').length)
     }
-    for (const field of formInputText) {
+    for (const field of modal.querySelectorAll('input:not([type="checkbox"])')) {
         field.addEventListener('blur', validation)
         field.addEventListener('change', validation)
     }
 
+    // Agregar o editar libro
     document.querySelector('#save').addEventListener('click', () => {
         if(document.querySelectorAll('[aria-invalid]').length) return
 
         if (!modal.querySelector('#bookID').value) {
-            console.log('nuevo libro')
             new Book(
                 document.querySelector('#titulo').value,
                 document.querySelector('#autora').value,
@@ -113,24 +112,18 @@ const modalBehavior = (() => {
                 document.querySelector('#web').value,
                 document.querySelector('#leido').checked
             )
-
         } else {
             console.log('libro viejo')
-
         }
-
-
         modal.close()
-
-
     })
 
-
+    document.querySelector('#cerrarModal').addEventListener('click', () => {
+        modal.close()
+    })
 })()
 
 
-// Navbar
-// Habilitar modal para la creación de nuevos libros
 
 // Habilitar el modal para la creación o carga de un nuevo libro
 
