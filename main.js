@@ -34,13 +34,11 @@ class Book {
     constructor (title, author, img, description, extension, year, url, read) {
         this.title = title
         this.author = author
-        this.img = img ? img
-            : `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/300/200`
+        this.img = img ? img : `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/300/200`
         this.description = description ? description : '...' 
         this.extension = extension ? extension : '' 
         this.year = year ? year : ''
-        this.url = url ? url
-            : `https://google.com/search?q=${title.replace(' ','+')}+${author.replace(' ','+')}`
+        this.url = url ? url : `https://google.com/search?q=${title.replace(' ','+')}+${author.replace(' ','+')}`
         this.read = read || false 
 
         localStorage.setItem(this.bookID, JSON.stringify(this))
@@ -95,12 +93,37 @@ const modalBehavior = (() => {
         }
         console.log(document.querySelectorAll('[aria-invalid]').length)
     }
-
     for (const field of formInputText) {
         field.addEventListener('blur', validation)
         field.addEventListener('change', validation)
-
     }
+
+    document.querySelector('#save').addEventListener('click', () => {
+        if(document.querySelectorAll('[aria-invalid]').length) return
+
+        if (!modal.querySelector('#bookID').value) {
+            console.log('nuevo libro')
+            new Book(
+                document.querySelector('#titulo').value,
+                document.querySelector('#autora').value,
+                document.querySelector('#imagen').value,
+                document.querySelector('#sinopsis').value,
+                document.querySelector('#extension').value,
+                document.querySelector('#anno').value,
+                document.querySelector('#web').value,
+                document.querySelector('#leido').checked
+            )
+
+        } else {
+            console.log('libro viejo')
+
+        }
+
+
+        modal.close()
+
+
+    })
 
 
 })()
