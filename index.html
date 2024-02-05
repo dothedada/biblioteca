@@ -26,20 +26,22 @@
 
         </div>
 
-        <menu id="ordenarBiblioteca">
+        <menu id="orderLibrary" class="ordenarBiblioteca">
             <span class="sr-only">Ordenar biblioteca por:</span>
 
-            <input id="nombre" type="radio" name="ordenar">
-            <label for="nombre">Título</label>
+            <input id="title" type="radio" name="ordenar">
+            <label for="title">Título</label>
 
-            <input id="autor" type="radio" name="ordenar">
-            <label for="autor">Autora</label>
+            <input id="author" type="radio" name="ordenar">
+            <label for="author">Autora</label>
 
-            <input id="anno" type="radio" name="ordenar">
-            <label for="anno">Año</label>
+            <input id="year" type="radio" name="ordenar">
+            <label for="year">Año</label>
 
-            <input id="orden" type="checkbox" checked>
-            <label for="orden">
+            <span> > </span>
+
+            <input id="order" type="checkbox" checked>
+            <label for="order">
                 <span class="ascendente" aria-hidden="true">A-Z</span>
                 <span class="descendente" aria-hidden="true">Z-A</span>
                 <span class="sr-only">Orden ascendente / orden descendente</span>

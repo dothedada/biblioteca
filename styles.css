@@ -112,13 +112,13 @@ menu input[type="checkbox"]:checked + label .ascendente {
 menu input[type="checkbox"]:checked + label .descendente {
     display: none;
 }
-menu input[type="checkbox"]:not(:checked) + label .descendente {
-    display: inline;
-}
 menu input[type="checkbox"]:not(:checked) + label .ascendente{
     display: none;
 }
-#ordenarBiblioteca {
+menu input[type="checkbox"]:not(:checked) + label .descendente {
+    display: inline;
+}
+.ordenarBiblioteca {
     margin: 0 auto;
 }
 #nuevoLibro {
