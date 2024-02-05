@@ -28,6 +28,9 @@
     white-space: nowrap; 
     width: 1px;
 }
+.hidden {
+    display: none;
+}
 
 html {
     font-size: 100%;
@@ -329,6 +332,7 @@ fieldset:last-child {
     color: var(--hover);
     font-size: 1rem;
     margin: 0.2rem 1rem;
+    text-wrap: balance;
 }
 #cerrarModal {
    background: none;

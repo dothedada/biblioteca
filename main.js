@@ -17,11 +17,11 @@ const lib = (() => {
         const arrIndex = shelf.findIndex(book => book.bookID === reference)
         shelf.splice(arrIndex, 1)
     }
-    const arrange = (order, by) => {
-        if (by === 'order') return shelf.reverse()
+    const arrange = (order, property) => {
+        if (property === 'order') return shelf.reverse()
         shelf.sort((a, b) => {
-            if (order) return a[by].localeCompare(b[by])
-            return b[by].localeCompare(a[by])
+            if (order) return a[property].localeCompare(b[property])
+            return b[property].localeCompare(a[property])
         })
     }
 
@@ -34,15 +34,13 @@ class Book {
     constructor (title, author, img, description, extension, year, url, read) {
         this.title = title
         this.author = author
-        this.img = !img ?
-            `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/300/200`
-            : `http://${img.replace(/^http(s:|:)\/\//, '')}`
-        this.description = !description ? '...' : description
-        this.extension = !extension ? '' : extension
-        this.year = !year ? '' : year
-        this.url = !url ? 
-            `https://google.com/search?q=${title.replace(' ','+')}+${author.replace(' ','+')}`
-            : `http://${url.replace(/^http(s:|:)\/\//, '')}`
+        this.img = img ? img
+            : `https://picsum.photos/id/${Math.floor(Math.random()*1000)}/300/200`
+        this.description = description ? description : '...' 
+        this.extension = extension ? extension : '' 
+        this.year = year ? year : ''
+        this.url = url ? url
+            : `https://google.com/search?q=${title.replace(' ','+')}+${author.replace(' ','+')}`
         this.read = read || false 
 
         localStorage.setItem(this.bookID, JSON.stringify(this))
@@ -74,6 +72,7 @@ for (const barBTN of document.querySelectorAll('#orderLibrary > label')) {
 
 const modalBehavior = (() => {
     const modal = document.querySelector('#modalLibro')
+    const formInputText = document.querySelectorAll('form input:not([type="checkbox"])')
 
     // Abrir Modal new
     for (const newBookBTN of document.querySelectorAll('.newBook')) {
@@ -84,7 +83,22 @@ const modalBehavior = (() => {
         })
     }
     
-    const formValidation = () => {
+    // form Validation
+    const validation = event => {
+        const isValid = event.target.checkValidity()
+        if (!isValid) {
+            event.target.previousElementSibling.classList.remove('hidden')
+            event.target.setAttribute('aria-invalid', !isValid)
+        } else {
+            event.target.previousElementSibling.classList.add('hidden')
+            event.target.removeAttribute('aria-invalid')
+        }
+        console.log(document.querySelectorAll('[aria-invalid]').length)
+    }
+
+    for (const field of formInputText) {
+        field.addEventListener('blur', validation)
+        field.addEventListener('change', validation)
 
     }
 

@@ -60,15 +60,31 @@
                 <legend class="sr-only">Información básica:</legend>
 
                 <div>
-                    <label for="titulo">¿Cuál es el nombre del libro? (Obligatorio)</label>
-                    <input id="titulo" type="text">
-                    <span class="validacion"></span>
+                    <label for="titulo">¿Cuál es el nombre del libro?*</label>
+                    <span 
+                        id="titulo-error" 
+                        class="validacion hidden">
+                            Escribe el título del libro, este campo no puede estar vacío.
+                    </span>
+                    <input 
+                        id="titulo" 
+                        type="text" 
+                        aria-describedby="titulo-error"
+                        required>
                 </div>
 
                 <div>
-                    <label for="autora">¿Quién lo escirbió? (Obligatorio)</label>
-                    <input id="autora" type="text">
-                    <span class="validacion"></span>
+                    <label for="autora">¿Quién lo escirbió?*</label>
+                    <span 
+                        id="autora-error"
+                        class="validacion hidden">
+                            Escribe el nombre de la autora o el autor, este campo no puede estar vacío.
+                    </span>
+                    <input 
+                        id="autora" 
+                        type="text" 
+                        aria-describedby="autora-error" 
+                        required>
                 </div>
             </fieldset>
 
@@ -77,31 +93,69 @@
 
                 <div>
                     <label for="imagen">¿Donde encuentro la portada?</label>
-                    <input id="imagen" type="url" placeholder="direccionDeLaImagen.com">
-                    <span class="validacion"></span>
+                    <span 
+                        id="imagen-error"
+                        class="validacion hidden">
+                            ingresa una URL válida o deja el campo en blanco
+                    </span>
+                    <input 
+                        id="imagen"
+                        type="url"
+                        placeholder="https://direccionDeLaImagen.com"
+                        aria-describedby="imagen-error" 
+                        pattern="http(s?)(:\/\/)((www.)?)(([^.]+)\.)?([a-zA-z0-9\-_]+)(.com|.net|.gov|.org|.in)(\/[^\s]*)?">
                 </div>
 
                 <div>
                     <label for="sinopsis">¿De qué trata? (140 caracteres)</label>
-                    <textarea id="sinopsis" rows="3" maxlength="140"></textarea>
+                    <textarea 
+                        id="sinopsis" 
+                        rows="3" 
+                        maxlength="140"></textarea>
                 </div>
 
                 <div>
                     <label for="extension">¿Cuántas páginas tiene?</label>
-                    <input id="extension" type="text" min="1" inputmode="numeric">
-                    <span class="validacion"></span>
+                    <span 
+                        id="extension-error"
+                        class="validacion hidden">
+                            Ingresa el número de la cantidad de páginas o deja el campo vacío
+                    </span>
+                    <input 
+                        id="extension" 
+                        type="number" 
+                        min="1" 
+                        aria-describedby="extension-error" 
+                        inputmode="numeric">
                 </div>
 
                 <div>
                     <label for="anno">¿Cuándo fue escrito?</label>
-                    <input id="anno" type="text" min="1" inputmode="numeric">
-                    <span class="validacion"></span>
+                    <span 
+                        id="anno-error"
+                        class="validacion hidden">
+                            Ingresa el año de publicación, si es de un año anterior al 1 de la era común, ingrésalo como un número negativo
+                    </span>
+                    <input 
+                        id="anno" 
+                        type="number" 
+                        aria-describedby="anno-error" 
+                        inputmode="numeric">
                 </div>
 
                 <div>
                     <label for="web">¿Donde puedo encontrarlo?</label>
-                    <input id="web" type="url" placeholder="direccionDelLibro.com">
-                    <span class="validacion"></span>
+                    <span 
+                        id="web-error" 
+                        class="validacion hidden">
+                            ingresa una URL válida o deja el campo en blanco
+                    </span>
+                    <input 
+                        id="web" 
+                        type="url" 
+                        placeholder="https://direccionDelLibro.com" 
+                        aria-describedby="web-error" 
+                        pattern="http(s?)(:\/\/)((www.)?)(([^.]+)\.)?([a-zA-z0-9\-_]+)(.com|.net|.gov|.org|.in)(\/[^\s]*)?">
                 </div>
 
                 <div>
@@ -111,7 +165,6 @@
                         <span>No lo he leído</span>
                     </label>
                 </div>
-                <div class="validacion"></div>
             </fieldset>
 
             <fieldset>
