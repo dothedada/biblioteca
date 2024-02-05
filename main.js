@@ -17,24 +17,12 @@ const lib = (() => {
         const arrIndex = shelf.findIndex(book => book.bookID === reference)
         shelf.splice(arrIndex, 1)
     }
-    const arrange = (order, by = undefined) => {
-        if (by === 'title') shelf.sort((a, b) => {
-            if (order) return a.title.localeCompare(b.title)
-            return b.title.localeCompare(a.title)
+    const arrange = (order, by) => {
+        if (by === 'order') return shelf.reverse()
+        shelf.sort((a, b) => {
+            if (order) return a[by].localeCompare(b[by])
+            return b[by].localeCompare(a[by])
         })
-        if (by === 'author') shelf.sort((a, b) => {
-            if (order) return a.author.localeCompare(b.author)
-            return b.author.localeCompare(a.author)
-        })
-        if (by === 'year') shelf.sort((a, b) => {
-            if (order) return +a.year - +b.year
-            return +b.year - +a.year
-        })
-        if (by === 'order') {
-            shelf.reverse()
-        }
-
-        console.table(shelf)
     }
 
     return { index, add, update, remove, arrange, shelf}
@@ -76,16 +64,37 @@ class Book {
     }
 }
 
-// Navbar
-// Habilitar modal para la creación de nuevos libros
-// habilitar la ordenada de los libros
-
+// Ordenar los libros
 for (const barBTN of document.querySelectorAll('#orderLibrary > label')) {
     barBTN.addEventListener('click', () => {
         console.log(document.querySelector('#order').checked)
         lib.arrange(document.querySelector('#order').checked, barBTN.getAttribute('for'))
     })
 }
+
+const modalBehavior = (() => {
+    const modal = document.querySelector('#modalLibro')
+
+    // Abrir Modal new
+    for (const newBookBTN of document.querySelectorAll('.newBook')) {
+        newBookBTN.addEventListener('click', () => {
+            // cargar campo invisible con el id del libro
+            // modal.querySelector('#bookID').setAttribute('value', 'carajillo')
+            modal.showModal()
+        })
+    }
+    
+    const formValidation = () => {
+
+    }
+
+
+})()
+
+
+// Navbar
+// Habilitar modal para la creación de nuevos libros
+
 // Habilitar el modal para la creación o carga de un nuevo libro
 
 // Lib

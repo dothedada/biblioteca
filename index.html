@@ -48,7 +48,7 @@
             </label>
         </menu>
 
-        <button id="nuevoLibro">
+        <button class="newBook">
             <span class="sr-only">Agregar un </span>
             Nuevo libro
         </button>
@@ -119,11 +119,13 @@
                 <button id="guardarLibroNuevo" type="button">Guardar</button>
                 <button id="cerrarModal" type="button">Cancelar</button>
             </fieldset>
+
+            <input id="bookID" type="hidden" value="">
         </form>
     </dialog>
 
     <main id="libreria">
-        <button class="nuevoLibroMain">
+        <button class="nuevoLibroMain newBook">
             <span class="sr-only">Agregar un nuevo libro</span>
             <span class="material-symbols-outlined" aria-hidden="true">add_circle</span>
         </button>
