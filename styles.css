@@ -179,24 +179,24 @@ main {
     object-fit: cover;
     border-radius: 1rem 1rem 0 0;
 }
-.ficha[data-leido="true"] .ficha__imagen {
+.ficha[data-read="true"] .ficha__imagen {
     mix-blend-mode: normal;
 }
-.ficha[data-leido="false"] .ficha__imagen {
+.ficha[data-read="false"] .ficha__imagen {
     mix-blend-mode: luminosity;
     opacity: 0.5;
 }
 
-.ficha[data-leido="true"] .ficha__leido {
+.ficha[data-read="true"] .ficha__leido {
     display: inline;
 }
-.ficha[data-leido="true"] .ficha__leer {
+.ficha[data-read="true"] .ficha__leer {
     display: none;
 }
-.ficha[data-leido="false"] .ficha__leido {
+.ficha[data-read="false"] .ficha__leido {
     display: none;
 }
-.ficha[data-leido="false"] .ficha__leer {
+.ficha[data-read="false"] .ficha__leer {
     display: inline;
 }
 
