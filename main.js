@@ -1,7 +1,6 @@
 const lib = (() => {
     const shelf = []
 
-    const index = () => localStorage.length
     const add = libro => shelf.unshift(libro)
     const update = (reference, updatedBook) => {
         const arrIndex = shelf.findIndex(book => book.bookID === reference)
@@ -20,7 +19,7 @@ const lib = (() => {
     }
     const find = id => shelf[shelf.findIndex(book => book.id === id)]
 
-    return { index, add, update, remove, arrange, find, shelf}
+    return { add, update, remove, arrange, find, shelf}
 })()
 
 class Book {
@@ -34,7 +33,7 @@ class Book {
         this.url = url ? url : `https://google.com/search?q=${title.replace(' ','+')}+${author.replace(' ','+')}`
         this.read = read || false 
         if (!id) {
-            this.id = `ref_${lib.index()}-${Math.floor(Math.random()*10000)}`
+            this.id = `ref_${localStorage.length}-${Math.floor(Math.random()*10000)}`
             localStorage.setItem(this.id, JSON.stringify(this))
         } else {
             this.id = id
@@ -56,34 +55,6 @@ class Book {
         localStorage.removeItem(this.id)
         lib.remove(this.id)
     }
-}
-
-const libInit = (() => {
-    const booksIDs = Object.keys(localStorage)
-    for (const bookID of booksIDs) {
-        if (!/^ref_/.test(bookID)) continue
-        const bookObject = JSON.parse(localStorage.getItem(bookID))
-        new Book(
-            bookObject.title, 
-            bookObject.author, 
-            bookObject.img,
-            bookObject.description,
-            bookObject.extension,
-            bookObject.year, 
-            bookObject.url,
-            bookObject.read,
-            bookID
-        )
-    }
-    // lib.shelf.sort((a,b) => a.bookID.localeCompare(b.bookID))
-    //     .splice(lib.shelf.findIndex(e => !e))
-})()
-
-// Ordenar los libros
-for (const barBTN of document.querySelectorAll('#orderLibrary > label')) {
-    barBTN.addEventListener('click', () => {
-        lib.arrange(document.querySelector('#order').checked, barBTN.getAttribute('for'))
-    })
 }
 
 const createBookCard = (book, edit = false) => {
@@ -209,10 +180,54 @@ const createBookCard = (book, edit = false) => {
     })
 }
 
+const loadBooks = (() => {
+    const booksIDs = Object.keys(localStorage).filter(e => e.includes('ref'))
+
+    if (!booksIDs.length) {
+        new Book(
+            "Matadero 5",
+            "test_K. Vonnegut",
+            "http://nidodelibros.com/wp-content/uploads/2023/02/9780440180296.jpeg",
+            "Chronicles a soldier's time-jumping journey through war, trauma, and surreal alien experiences.",
+            "255",
+            "1969",
+            "http://nidodelibros.com/producto/slaughterhouse-five/",
+            true
+        )
+        createBookCard(lib.shelf[0])
+    }
+
+    for (const bookID of booksIDs) {
+        if (!/^ref_/.test(bookID)) continue
+        const bookObject = JSON.parse(localStorage.getItem(bookID))
+        new Book(
+            bookObject.title, 
+            bookObject.author, 
+            bookObject.img,
+            bookObject.description,
+            bookObject.extension,
+            bookObject.year, 
+            bookObject.url,
+            bookObject.read,
+            bookID
+        )
+        createBookCard(lib.shelf[0])
+    }
+})()
+
+// Ordenar los libros
+for (const barBTN of document.querySelectorAll('#orderLibrary > label')) {
+    barBTN.addEventListener('click', () => {
+        lib.arrange(document.querySelector('#order').checked, barBTN.getAttribute('for'))
+        document.querySelectorAll('[data-id]').forEach(book => book.remove())
+        lib.shelf.forEach(book => createBookCard(book))
+    })
+}
+
 const modalBehavior = (() => {
     const modal = document.querySelector('#modalLibro')
 
-    // Abrir Modal new
+    // Open Modal for new book
     for (const newBookBTN of document.querySelectorAll('.newBook')) {
         newBookBTN.addEventListener('click', () => {
             for (const input of modal.querySelectorAll('input')) {
@@ -236,7 +251,7 @@ const modalBehavior = (() => {
         }
     }
     for (const field of modal.querySelectorAll('input:not([type="checkbox"])')) {
-        // field.addEventListener('blur', validation)
+        field.addEventListener('blur', validation)
         field.addEventListener('change', validation)
     }
 
@@ -278,30 +293,3 @@ const modalBehavior = (() => {
         modal.close()
     })
 })()
-
-for (const libro of lib.shelf) createBookCard(libro)
-// Habilitar el modal para la creación o carga de un nuevo libro
-
-// Lib
-// habilitar funcionalidad de edicion
-//
-// const book1 = new Book(
-//     "Matadero 5",
-//     "test_K. Vonnegut",
-//     "http://nidodelibros.com/wp-content/uploads/2023/02/9780440180296.jpeg",
-//     "Chronicles a soldier's time-jumping journey through war, trauma, and surreal alien experiences.",
-//     "255",
-//     "1969",
-//     "http://nidodelibros.com/producto/slaughterhouse-five/",
-//     true
-// )
-// const book2 = new Book(
-//     "La insoportable levedad del Ser",
-//     "Milan Kundera",
-//     "https://revistasantiago.cl/cms/wp-content/uploads/2023/07/kundera.webp",
-//     "",
-//     "360",
-//     "1989",
-//     "",
-//     false
-// )
