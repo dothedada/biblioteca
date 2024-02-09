@@ -90,7 +90,6 @@ for (const barBTN of document.querySelectorAll('#orderLibrary > label')) {
 
 const createBookCard = book => {
     const library = document.querySelector('#libreria')
-
     const card = document.createElement('div')
     card.classList.add('ficha')
     card.setAttribute('data-read', book.read)
@@ -178,7 +177,6 @@ const createBookCard = book => {
     library.appendChild(card)
 
     // Button actions
-    // const bookID = this.closest('.ficha').getAttribute('data-id')
     const bookOBJ = lib.find(buttons.parentElement.getAttribute('data-id'))
     readBTN.addEventListener('click', function() {
         let isRead = this.closest('.ficha').getAttribute('data-read')
@@ -221,13 +219,16 @@ const modalBehavior = (() => {
     const modal = document.querySelector('#modalLibro')
 
     // Abrir Modal new
-        for (const newBookBTN of document.querySelectorAll('.newBook')) {
-            newBookBTN.addEventListener('click', () => {
-                // cargar campo invisible con el id del libro
-                // modal.querySelector('#bookID').setAttribute('value', 'carajillo')
-                modal.showModal()
-            })
-        }
+    for (const newBookBTN of document.querySelectorAll('.newBook')) {
+        newBookBTN.addEventListener('click', () => {
+            for (const input of modal.querySelectorAll('input')) {
+                input.value = ''
+            }
+            modal.querySelector('#sinopsis').value = ''
+            modal.querySelector('#leido').checked = false
+            modal.showModal()
+        })
+    }
 
     // form Validation
     const validation = event => {
@@ -242,7 +243,7 @@ const modalBehavior = (() => {
         console.log(document.querySelectorAll('[aria-invalid]').length)
     }
     for (const field of modal.querySelectorAll('input:not([type="checkbox"])')) {
-        field.addEventListener('blur', validation)
+        // field.addEventListener('blur', validation)
         field.addEventListener('change', validation)
     }
 
@@ -268,6 +269,7 @@ const modalBehavior = (() => {
     })
 
     document.querySelector('#cerrarModal').addEventListener('click', () => {
+        document.querySelector('#bookID').value = ''
         modal.close()
     })
 })()
