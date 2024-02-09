@@ -111,9 +111,7 @@ const createBookCard = book => {
     if (book.extension) bookData.textContent += `${book.extension} páginas`
     if (book.extension && book.year) bookData.textContent += ' | '
     if (book.year) bookData.textContent += book.year
-    authorship.appendChild(title)
-    authorship.appendChild(author)
-    authorship.appendChild(bookData)
+    authorship.append(title, author, bookData)
 
     const bookResume = document.createElement('p')
     bookResume.classList.add('ficha__informacion')
@@ -132,9 +130,7 @@ const createBookCard = book => {
     searchGoogleBTN_SVG.setAttribute('aria-hidden', true)
     searchGoogleBTN_SVG.classList.add('material-symbols-outlined')
     searchGoogleBTN_SVG.textContent = 'search'
-    searchGoogleBTN.appendChild(searchGoogleBTN_SR)
-    searchGoogleBTN.appendChild(searchGoogleBTN_SVG)
-    buttons.appendChild(searchGoogleBTN)
+    searchGoogleBTN.append(searchGoogleBTN_SR, searchGoogleBTN_SVG)
     // Read button
     const readBTN = document.createElement('button')
     const read_SR = document.createElement('span')
@@ -155,51 +151,59 @@ const createBookCard = book => {
     toRead_SVG.classList.add('material-symbols-outlined')
     toRead_SVG.classList.add('ficha__leido')
     toRead_SVG.textContent = 'menu_book'
-    readBTN.appendChild(read_SR)
-    readBTN.appendChild(read_SVG)
-    readBTN.appendChild(toRead_SR)
-    readBTN.appendChild(toRead_SVG)
-    readBTN.addEventListener('click', function() {
-        const bookID = this.closest('.ficha').getAttribute('data-id')
-        let isRead = this.closest('.ficha').getAttribute('data-read')
-        isRead = isRead === 'true' ? 'false' : 'true'
-        lib.find(bookID).edit({ read: isRead })
-        this.closest('.ficha').setAttribute('data-read', isRead)
-    })
-    buttons.appendChild(readBTN)
+    readBTN.append(read_SR, read_SVG, toRead_SR, toRead_SVG)
     // Edit button
+    const editBTN = document.createElement('button')
+    const edit_SR = document.createElement('span')
+    edit_SR.classList.add('sr-only')
+    edit_SR.textContent = 'Editar la información de este libro'
+    const edit_SVG = document.createElement('span')
+    edit_SVG.setAttribute('aria-hidden', true)
+    edit_SVG.classList.add('material-symbols-outlined')
+    edit_SVG.textContent = 'edit'
+    editBTN.append(edit_SR, edit_SVG)
     // delete button
     const deleteBTN = document.createElement('button')
     const delete_SR = document.createElement('span')
     delete_SR.classList.add('sr-only')
-    delete_SR.textContent = 'borrar'
+    delete_SR.textContent = 'Borrar este libro'
     const delete_SVG = document.createElement('span')
     delete_SVG.setAttribute('aria-hidden', true)
     delete_SVG.classList.add('material-symbols-outlined')
     delete_SVG.textContent = 'delete'
-    deleteBTN.appendChild(delete_SR)
-    deleteBTN.appendChild(delete_SVG)
-    deleteBTN.addEventListener('click', function() {
-        const bookOBJ = lib.find(this.closest('.ficha').getAttribute('data-id'))
-        if (window.confirm(`¿Realmente quieres eliminar ${bookOBJ.title} de la biblioteca`)) {
+    deleteBTN.append(delete_SR, delete_SVG)
+    buttons.append(searchGoogleBTN, readBTN, editBTN, deleteBTN)
 
+    card.append(img, authorship, bookResume, buttons)
+    library.appendChild(card)
+
+    // Button actions
+    // const bookID = this.closest('.ficha').getAttribute('data-id')
+    const bookOBJ = lib.find(buttons.parentElement.getAttribute('data-id'))
+    readBTN.addEventListener('click', function() {
+        let isRead = this.closest('.ficha').getAttribute('data-read')
+        isRead = isRead === 'true' ? false : true
+        bookOBJ.edit({ read: isRead })
+        this.closest('.ficha').setAttribute('data-read', isRead)
+    })
+    editBTN.addEventListener('click', function() {
+        document.querySelector('#bookID').value = bookOBJ.id
+        document.querySelector('#titulo').value = bookOBJ.title
+        document.querySelector('#autora').value = bookOBJ.author
+        document.querySelector('#imagen').value = bookOBJ.img
+        document.querySelector('#sinopsis').value = bookOBJ.description
+        document.querySelector('#extension').value = bookOBJ.extension
+        document.querySelector('#anno').value = bookOBJ.year
+        document.querySelector('#web').value = bookOBJ.url
+        document.querySelector('#leido').checked = bookOBJ.read 
+        document.querySelector('#modalLibro').showModal()
+    })
+    deleteBTN.addEventListener('click', function() {
+        if (window.confirm(`¿Realmente quieres eliminar ${bookOBJ.title} de la biblioteca?`)) {
             lib.find(this.closest('.ficha').getAttribute('data-id')).delete()
             this.closest('.ficha').remove()
         }
     })
-    buttons.appendChild(deleteBTN)
-
-
-
-    card.appendChild(img)
-    card.appendChild(authorship)
-    card.appendChild(bookResume)
-    card.appendChild(buttons)
-
-    library.appendChild(card)
-
-
-
 }
 
 for (const libro of lib.shelf) {
