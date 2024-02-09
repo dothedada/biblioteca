@@ -159,7 +159,7 @@ const createBookCard = book => {
     readBTN.appendChild(read_SVG)
     readBTN.appendChild(toRead_SR)
     readBTN.appendChild(toRead_SVG)
-    readBTN.addEventListener('click', function () {
+    readBTN.addEventListener('click', function() {
         const bookID = this.closest('.ficha').getAttribute('data-id')
         let isRead = this.closest('.ficha').getAttribute('data-read')
         isRead = isRead === 'true' ? 'false' : 'true'
@@ -169,6 +169,25 @@ const createBookCard = book => {
     buttons.appendChild(readBTN)
     // Edit button
     // delete button
+    const deleteBTN = document.createElement('button')
+    const delete_SR = document.createElement('span')
+    delete_SR.classList.add('sr-only')
+    delete_SR.textContent = 'borrar'
+    const delete_SVG = document.createElement('span')
+    delete_SVG.setAttribute('aria-hidden', true)
+    delete_SVG.classList.add('material-symbols-outlined')
+    delete_SVG.textContent = 'delete'
+    deleteBTN.appendChild(delete_SR)
+    deleteBTN.appendChild(delete_SVG)
+    deleteBTN.addEventListener('click', function() {
+        const bookOBJ = lib.find(this.closest('.ficha').getAttribute('data-id'))
+        if (window.confirm(`¿Realmente quieres eliminar ${bookOBJ.title} de la biblioteca`)) {
+
+            lib.find(this.closest('.ficha').getAttribute('data-id')).delete()
+            this.closest('.ficha').remove()
+        }
+    })
+    buttons.appendChild(deleteBTN)
 
 
 
