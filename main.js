@@ -82,24 +82,22 @@ const libInit = (() => {
 // Ordenar los libros
 for (const barBTN of document.querySelectorAll('#orderLibrary > label')) {
     barBTN.addEventListener('click', () => {
-        console.log(document.querySelector('#order').checked)
         lib.arrange(document.querySelector('#order').checked, barBTN.getAttribute('for'))
     })
 }
 
-
-const createBookCard = book => {
+const createBookCard = (book, edit = false) => {
     const library = document.querySelector('#libreria')
     const card = document.createElement('div')
     card.classList.add('ficha')
     card.setAttribute('data-read', book.read)
     card.setAttribute('data-id', book.id)
 
+    // Display information
     const img = document.createElement('img')
     img.src = book.img
     img.alt = `Imagen de ${book.title}, escrito por ${book.author}`
     img.classList.add('ficha__imagen')
-
     const authorship = document.createElement('div')
     authorship.classList.add('ficha__autoria')
     const title = document.createElement('h2')
@@ -111,14 +109,14 @@ const createBookCard = book => {
     if (book.extension && book.year) bookData.textContent += ' | '
     if (book.year) bookData.textContent += book.year
     authorship.append(title, author, bookData)
-
     const bookResume = document.createElement('p')
     bookResume.classList.add('ficha__informacion')
     bookResume.textContent = book.description
 
+    // Buttons
     const buttons = document.createElement('div')
     buttons.classList.add('ficha__acciones')
-    // Search Button
+
     const searchGoogleBTN = document.createElement('a')
     searchGoogleBTN.href = book.url
     searchGoogleBTN.target ='_blank'
@@ -130,7 +128,7 @@ const createBookCard = book => {
     searchGoogleBTN_SVG.classList.add('material-symbols-outlined')
     searchGoogleBTN_SVG.textContent = 'search'
     searchGoogleBTN.append(searchGoogleBTN_SR, searchGoogleBTN_SVG)
-    // Read button
+
     const readBTN = document.createElement('button')
     const read_SR = document.createElement('span')
     read_SR.classList.add('sr-only')
@@ -151,7 +149,7 @@ const createBookCard = book => {
     toRead_SVG.classList.add('ficha__leido')
     toRead_SVG.textContent = 'menu_book'
     readBTN.append(read_SR, read_SVG, toRead_SR, toRead_SVG)
-    // Edit button
+
     const editBTN = document.createElement('button')
     const edit_SR = document.createElement('span')
     edit_SR.classList.add('sr-only')
@@ -161,7 +159,7 @@ const createBookCard = book => {
     edit_SVG.classList.add('material-symbols-outlined')
     edit_SVG.textContent = 'edit'
     editBTN.append(edit_SR, edit_SVG)
-    // delete button
+
     const deleteBTN = document.createElement('button')
     const delete_SR = document.createElement('span')
     delete_SR.classList.add('sr-only')
@@ -173,10 +171,17 @@ const createBookCard = book => {
     deleteBTN.append(delete_SR, delete_SVG)
     buttons.append(searchGoogleBTN, readBTN, editBTN, deleteBTN)
 
+    // Assembly display
     card.append(img, authorship, bookResume, buttons)
-    library.appendChild(card)
+    if (!edit) {
+        library.insertBefore(card, library.querySelector('.newBook'))
+    } else {
+        library.insertBefore(card, library.querySelector(`[data-id=${edit}]`))
+        card.nextElementSibling.remove()
 
-    // Button actions
+    }
+
+    // Buttons actions
     const bookOBJ = lib.find(buttons.parentElement.getAttribute('data-id'))
     readBTN.addEventListener('click', function() {
         let isRead = this.closest('.ficha').getAttribute('data-read')
@@ -204,17 +209,6 @@ const createBookCard = book => {
     })
 }
 
-for (const libro of lib.shelf) {
-    console.log(libro.title)
-    createBookCard(libro)
-}
-
-
-
-
-
-
-
 const modalBehavior = (() => {
     const modal = document.querySelector('#modalLibro')
 
@@ -240,7 +234,6 @@ const modalBehavior = (() => {
             event.target.previousElementSibling.classList.add('hidden')
             event.target.removeAttribute('aria-invalid')
         }
-        console.log(document.querySelectorAll('[aria-invalid]').length)
     }
     for (const field of modal.querySelectorAll('input:not([type="checkbox"])')) {
         // field.addEventListener('blur', validation)
@@ -250,6 +243,7 @@ const modalBehavior = (() => {
     // Agregar o editar libro
     document.querySelector('#save').addEventListener('click', () => {
         if(document.querySelectorAll('[aria-invalid]').length) return
+        const bookID = modal.querySelector('#bookID').value
 
         if (!modal.querySelector('#bookID').value) {
             new Book(
@@ -262,8 +256,19 @@ const modalBehavior = (() => {
                 document.querySelector('#web').value,
                 document.querySelector('#leido').checked
             )
+            createBookCard(lib.shelf[0])
         } else {
-            console.log('libro viejo')
+            lib.find(bookID).edit({
+                title : document.querySelector('#titulo').value,
+                author : document.querySelector('#autora').value,
+                img : document.querySelector('#imagen').value,
+                description : document.querySelector('#sinopsis').value,
+                extension : document.querySelector('#extension').value, 
+                year : document.querySelector('#anno').value,
+                url : document.querySelector('#web').value,
+                read : document.querySelector('#leido').checked 
+            })
+            createBookCard(lib.shelf[lib.shelf.findIndex(b => b.id === bookID)], bookID)
         }
         modal.close()
     })
@@ -273,6 +278,8 @@ const modalBehavior = (() => {
         modal.close()
     })
 })()
+
+for (const libro of lib.shelf) createBookCard(libro)
 // Habilitar el modal para la creación o carga de un nuevo libro
 
 // Lib
